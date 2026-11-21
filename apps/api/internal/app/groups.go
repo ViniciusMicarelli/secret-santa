@@ -52,8 +52,8 @@ func createGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var p struct{ Name, Description, EventDate, Budget string }
-	if body(r, &p) != nil || len(strings.TrimSpace(p.Name)) < 2 || len(p.Name) > 100 {
-		fail(w, 400, "Informe um nome para o grupo.")
+	if body(r, &p) != nil || len(strings.TrimSpace(p.Name)) < 2 || len(p.Name) > 100 || len(p.Description) > 1000 || len(p.Budget) > 100 || (p.EventDate != "" && !validEventDate(p.EventDate)) {
+		fail(w, 400, "Confira o nome, a data e os demais dados do grupo.")
 		return
 	}
 	tx, e := db.Begin(ctx)
@@ -72,6 +72,11 @@ func createGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respond(w, map[string]any{"id": id})
+}
+
+func validEventDate(value string) bool {
+	t, err := time.Parse("2006-01-02", value)
+	return err == nil && t.Format("2006-01-02") == value
 }
 
 func join(w http.ResponseWriter, r *http.Request) {

@@ -132,6 +132,30 @@ func recoveryCodes(w http.ResponseWriter, r *http.Request) {
 	respond(w, map[string]any{"codes": codes})
 }
 
+// Allow the account holder to invalidate sessions on all devices.
+func logoutAll(w http.ResponseWriter, r *http.Request) {
+	u := require(w, r)
+	if u == 0 {
+		return
+	}
+	var p struct{ Password string }
+	if body(r, &p) != nil || len(p.Password) == 0 || len(p.Password) > 72 {
+		fail(w, 400, "Informe sua senha.")
+		return
+	}
+	var pass string
+	if db.QueryRow(ctx, "select password from users where id=$1", u).Scan(&pass) != nil || bcrypt.CompareHashAndPassword([]byte(pass), []byte(p.Password)) != nil {
+		fail(w, 401, "Senha incorreta.")
+		return
+	}
+	if _, err := db.Exec(ctx, "delete from sessions where user_id=$1", u); err != nil {
+		fail(w, 500, "Não foi possível encerrar as sessões.")
+		return
+	}
+	http.SetCookie(w, &http.Cookie{Name: "session", Path: "/", MaxAge: -1, HttpOnly: true, Secure: os.Getenv("ENV") == "production", SameSite: http.SameSiteLaxMode})
+	respond(w, map[string]bool{"ok": true})
+}
+
 func recoverAccount(w http.ResponseWriter, r *http.Request) {
 	var p struct{ Username, Code, Password string }
 	if body(r, &p) != nil || len(p.Password) < 8 || len(p.Password) > 72 {

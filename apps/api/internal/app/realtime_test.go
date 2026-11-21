@@ -99,6 +99,24 @@ func TestWebsocketAuthorizationAndPrivateEvents(t *testing.T) {
 		}
 		defer conns[i].Close()
 	}
+	// A single account cannot exhaust one group with unlimited sockets.
+	var extra []*websocket.Conn
+	for i := 0; i < 7; i++ {
+		conn, _, err := dial(0, server.URL)
+		if err != nil {
+			t.Fatalf("additional connection %d: %v", i, err)
+		}
+		extra = append(extra, conn)
+	}
+	if conn, resp, err := dial(0, server.URL); err == nil {
+		conn.Close()
+		t.Fatal("connection limit was not enforced")
+	} else if resp == nil || resp.StatusCode != http.StatusTooManyRequests {
+		t.Fatalf("connection limit status: %v", resp)
+	}
+	for _, conn := range extra {
+		conn.Close()
+	}
 	notifyUpdate(updateEvent{Group: g, Kind: "group"})
 	for i := range conns {
 		conns[i].SetReadDeadline(time.Now().Add(3 * time.Second))

@@ -28,8 +28,32 @@ type realtimeClient struct {
 
 var realtime = struct {
 	sync.Mutex
-	clients map[*realtimeClient]struct{}
-}{clients: make(map[*realtimeClient]struct{})}
+	clients      map[*realtimeClient]struct{}
+	reservations map[realtimeKey]int
+}{clients: make(map[*realtimeClient]struct{}), reservations: make(map[realtimeKey]int)}
+
+type realtimeKey struct{ group, user int64 }
+
+// Bound simultaneous sockets for one account and group on this API instance.
+func reserveRealtime(key realtimeKey) bool {
+	realtime.Lock()
+	defer realtime.Unlock()
+	if realtime.reservations[key] >= 8 {
+		return false
+	}
+	realtime.reservations[key]++
+	return true
+}
+func releaseRealtime(key realtimeKey) {
+	realtime.Lock()
+	defer realtime.Unlock()
+	if realtime.reservations[key] <= 1 {
+		delete(realtime.reservations, key)
+	} else {
+		realtime.reservations[key]--
+	}
+}
+
 var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
 	origin := r.Header.Get("Origin")
 	if origin == "" {
@@ -151,6 +175,12 @@ func groupEvents(w http.ResponseWriter, r *http.Request) {
 		fail(w, 401, "Entre na sua conta.")
 		return
 	}
+	key := realtimeKey{group: group, user: user}
+	if !reserveRealtime(key) {
+		fail(w, http.StatusTooManyRequests, "Muitas conexões abertas neste grupo.")
+		return
+	}
+	defer releaseRealtime(key)
 	conn, e := upgrader.Upgrade(w, r, nil)
 	if e != nil {
 		return

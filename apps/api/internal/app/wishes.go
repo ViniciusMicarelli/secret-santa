@@ -2,9 +2,21 @@ package app
 
 import (
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 )
+
+func validWishLink(link string) bool {
+	if link == "" {
+		return true
+	}
+	if len(link) > 1000 || strings.TrimSpace(link) != link || strings.ContainsAny(link, "\\\r\n\t") {
+		return false
+	}
+	u, err := url.Parse(link)
+	return err == nil && (u.Scheme == "https" || u.Scheme == "http") && u.Hostname() != "" && u.User == nil && u.Opaque == ""
+}
 
 func wish(w http.ResponseWriter, r *http.Request) {
 	u := require(w, r)
@@ -17,7 +29,7 @@ func wish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var p struct{ Title, Detail, Link string }
-	if body(r, &p) != nil || len(strings.TrimSpace(p.Title)) < 1 || len(p.Title) > 160 || len(p.Detail) > 500 || len(p.Link) > 1000 || (p.Link != "" && !strings.HasPrefix(p.Link, "https://") && !strings.HasPrefix(p.Link, "http://")) {
+	if body(r, &p) != nil || len(strings.TrimSpace(p.Title)) < 1 || len(p.Title) > 160 || len(p.Detail) > 500 || !validWishLink(p.Link) {
 		fail(w, 400, "Confira os dados da ideia.")
 		return
 	}
@@ -58,7 +70,7 @@ func updateWish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var p struct{ Title, Detail, Link string }
-	if body(r, &p) != nil || len(strings.TrimSpace(p.Title)) < 1 || len(p.Title) > 160 || len(p.Detail) > 500 || len(p.Link) > 1000 || (p.Link != "" && !strings.HasPrefix(p.Link, "https://") && !strings.HasPrefix(p.Link, "http://")) {
+	if body(r, &p) != nil || len(strings.TrimSpace(p.Title)) < 1 || len(p.Title) > 160 || len(p.Detail) > 500 || !validWishLink(p.Link) {
 		fail(w, 400, "Confira os dados da ideia.")
 		return
 	}

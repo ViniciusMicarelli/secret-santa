@@ -1,6 +1,6 @@
 # Plano do produto
 
-Entre Nós reúne grupos para um amigo secreto: convite por link, regras por família, sorteio imediato ou agendado, revelação individual, lista de desejos e conversas anônimas. Não há envio de e-mail nem integração com WhatsApp. A paleta parte de Galactic Blue, True Blue e Magenta Pink, aproximadas da imagem de referência.
+Entre Nós reúne grupos para um amigo secreto: convite por link, regras por família, sorteio imediato ou agendado, revelação individual, lista de desejos e conversas anônimas. Não há envio de e-mail, integração com WhatsApp ou upload de arquivos. A identidade visual usa tons natalinos de vinho, creme e verde.
 
 ## Regras
 
@@ -8,6 +8,6 @@ Participantes entram com conta; somente o organizador configura o grupo. O sorte
 
 ## Evolução
 
-Recuperação de conta usa códigos de uso único exibidos na área de segurança. Há revogação de convites, remoção de participantes antes do sorteio, favorito na lista, indicadores de mensagens não lidas e registro de denúncias. O limitador de tentativas usa PostgreSQL. As migrations são versionadas e serializadas por bloqueio no banco.
+Recuperação de conta usa códigos de uso único exibidos na área de segurança. Há revogação de convites, remoção de participantes antes do sorteio, favorito na lista, indicadores de mensagens não lidas, registro de denúncias e encerramento de sessões em todos os dispositivos com confirmação de senha. O limitador de tentativas usa PostgreSQL. As migrations são versionadas e serializadas por bloqueio no banco.
 
 Dependentes, restrições individuais e e-mail são posteriores. Antes de lançamento público: revisão de segurança independente, política de privacidade, exclusão de dados, interface e processo de moderação de denúncias, backups e testes de restauração, monitoramento, verificação da cadeia de proxies para limites de tentativas e revisão de acessibilidade.

@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -36,7 +37,17 @@ func fail(w http.ResponseWriter, code int, msg string) {
 
 func body(r *http.Request, v any) error {
 	r.Body = http.MaxBytesReader(nil, r.Body, 16384)
-	return json.NewDecoder(r.Body).Decode(v)
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(v); err != nil {
+		return err
+	}
+	if err := decoder.Decode(new(any)); err != io.EOF {
+		if err == nil {
+			return io.ErrUnexpectedEOF
+		}
+		return err
+	}
+	return nil
 }
 
 func newHandler() http.Handler {
@@ -46,6 +57,7 @@ func newHandler() http.Handler {
 	mux.HandleFunc("POST /api/login", auth)
 	mux.HandleFunc("POST /api/recovery", recoverAccount)
 	mux.HandleFunc("POST /api/recovery-codes", recoveryCodes)
+	mux.HandleFunc("POST /api/logout-all", logoutAll)
 	mux.HandleFunc("POST /api/logout", func(w http.ResponseWriter, r *http.Request) {
 		if c, e := r.Cookie("session"); e == nil {
 			if _, err := db.Exec(ctx, "delete from sessions where token=$1", hash(c.Value)); err != nil {
@@ -112,6 +124,16 @@ func security(next http.Handler) http.Handler {
 				}
 				key = "auth:" + ip
 				limit = 30
+			} else if r.URL.Path == "/api/recovery-codes" {
+				if u := uid(r); u != 0 {
+					key = "recovery-codes:" + strconv.FormatInt(u, 10)
+					limit = 10
+				}
+			} else if r.URL.Path == "/api/logout-all" {
+				if u := uid(r); u != 0 {
+					key = "logout-all:" + strconv.FormatInt(u, 10)
+					limit = 10
+				}
 			} else if strings.Contains(r.URL.Path, "/chat/") {
 				if u := uid(r); u != 0 {
 					key = "chat:" + strconv.FormatInt(u, 10)
