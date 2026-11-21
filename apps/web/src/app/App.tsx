@@ -32,17 +32,52 @@ export function App() {
   const loc = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
   useEffect(() => {
+    let active = true;
+    const timeout = window.setTimeout(() => {
+      if (active) {
+        setUnavailable(true);
+        setReady(true);
+      }
+    }, 8000);
     api("/me")
       .then(setUser)
-      .catch(() => {})
-      .finally(() => setReady(true));
+      .catch((error) => {
+        if (active && error.status !== 401) setUnavailable(true);
+      })
+      .finally(() => {
+        if (active) {
+          window.clearTimeout(timeout);
+          setReady(true);
+        }
+      });
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+    };
   }, []);
   if (!ready)
     return (
       <div className="loading">
         entre nós<span>.</span>
       </div>
+    );
+  if (unavailable)
+    return (
+      <main className="service-unavailable">
+        <h1>Não foi possível conectar.</h1>
+        <p>
+          Estamos com dificuldades para acessar o serviço. Tente novamente em
+          instantes.
+        </p>
+        <button
+          className="btn btn-navy"
+          onClick={() => window.location.reload()}
+        >
+          Tentar novamente
+        </button>
+      </main>
     );
   return (
     <Routes>
