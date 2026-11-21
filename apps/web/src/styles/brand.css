@@ -1,0 +1,84 @@
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  line-height: 1;
+}
+.brand-mark {
+  display: block;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  overflow: visible;
+}
+.brand > span {
+  white-space: nowrap;
+}
+.intro-mark .brand-mark {
+  width: 72px;
+  height: 72px;
+}
+.intro-mark {
+  font-size: 0;
+}
+.app-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.app-nav-actions a {
+  font-size: 14px;
+  font-weight: 600;
+}
+.nav-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #ffffff55;
+  border-radius: 8px;
+  background: transparent;
+  color: #fffdf7;
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  min-height: 40px;
+  transition: background 0.2s;
+}
+.nav-logout:hover {
+  background: #ffffff18;
+}
+.nav-logout:focus-visible {
+  outline: 3px solid #e7c682;
+  outline-offset: 3px;
+}
+.nav-error {
+  background: #fff1eb;
+  color: #913e42;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 14px;
+}
+@media (max-width: 420px) {
+  .brand {
+    font-size: 21px;
+    gap: 4px;
+  }
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+  }
+  .app-nav-actions {
+    gap: 12px;
+  }
+  .app-nav-actions a,
+  .nav-logout {
+    font-size: 12px;
+  }
+  .nav-logout {
+    padding: 8px;
+  }
+  .app-nav .wrap {
+    width: calc(100% - 24px);
+  }
+}

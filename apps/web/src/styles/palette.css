@@ -1,0 +1,353 @@
+/* Pine, muted cranberry, sage and warm porcelain. */
+:root {
+  --navy: #26473e;
+  --blue: #a14e59;
+  --pink: #a14e59;
+  --paper: #f8f7f1;
+  color: #26473e;
+  background: #f8f7f1;
+}
+.landing {
+  background: #193b35;
+}
+.landing .hero {
+  color: #fffdf8;
+}
+.holiday-banner {
+  background: #994a57;
+  color: #fff9f4;
+}
+.landing .brand-icon,
+.landing .brand-dot {
+  color: #e2c9a2;
+}
+.landing .nav {
+  border-color: #ffffff26;
+}
+.btn-pink {
+  background: #a14e59;
+}
+.btn-pink:hover {
+  background: #873b49;
+}
+.hero h1 em,
+.features h2 em,
+.cta h2 em {
+  color: #e4c9a1;
+}
+.hero-copy > p {
+  color: #e0e8df;
+}
+.hero-art {
+  background: radial-gradient(
+    ellipse at center,
+    #51766a 0%,
+    #2b554b 37%,
+    transparent 72%
+  );
+}
+.gift-box {
+  background: linear-gradient(135deg, #b4656b, #914652);
+  box-shadow:
+    inset -25px -15px 0 #873d4a,
+    0 35px 55px #0004;
+}
+.gift-lid {
+  background: #c78280;
+  box-shadow: 0 12px 0 #914652;
+}
+.ribbon-v {
+  background: #dfc6a1;
+}
+.ribbon-top {
+  background: #f2dfbf;
+}
+.bow {
+  border-color: #e4c9a2;
+}
+.bow-knot {
+  background: #f2dfbf;
+}
+.hero-star,
+.art-spark {
+  color: #e1c79e;
+}
+.marquee {
+  background: #a14e59;
+  color: #fffaf4;
+}
+.light {
+  background: #f8f7f1;
+  color: #26473e;
+}
+.steps article {
+  background: #fffefa;
+  border-color: #e5e8df;
+}
+.steps p,
+.section-head > p,
+.faq-grid > div > p {
+  color: #657b70;
+}
+.step-icon {
+  background: #e4eee5;
+  color: #456c5e;
+}
+.step-icon.blue {
+  background: #f3ebdd;
+  color: #987e60;
+}
+.step-icon.pink-bg {
+  background: #f5e5e3;
+  color: #a14e59;
+}
+.experience-section {
+  background: #eaece3;
+  color: #26473e;
+}
+.experience-copy h2 em {
+  color: #a14e59;
+}
+.experience-preview {
+  background: #cddbd0;
+}
+.features {
+  background: #2b5147;
+}
+.features h2 em {
+  color: #e5cfad;
+}
+.feature-intro,
+.feature-list p {
+  color: #d8e6db;
+}
+.cta {
+  background: #a14e59;
+  color: #fffaf4;
+}
+.cta h2 em {
+  color: #f0dfbf;
+}
+.app-nav,
+.auth-page {
+  background: #24483e;
+}
+.app-shell {
+  background:
+    radial-gradient(circle at 100% 0%, #e3ebe2 0, transparent 340px), #f7f7f2;
+}
+.panel,
+.group-card,
+.empty {
+  border-color: #e1e7df;
+}
+.btn-navy {
+  background: #26473e;
+}
+.pink,
+.brand-dot {
+  color: #a14e59;
+}
+.tabs button.active,
+.chat-switch button.active {
+  border-color: #a14e59;
+}
+.card-spark {
+  color: #a14e59;
+}
+.pill {
+  background: #e5eee7;
+  color: #436b59;
+}
+.scratch-shell {
+  background: #925360;
+}
+.scratch-heading {
+  color: #f3dbbd;
+}
+.scratch-result span {
+  color: #994a57;
+}
+.scratch-result {
+  color: #26473e;
+}
+.scratch-card.is-revealed .scratch-result {
+  animation: card-reveal 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.scratch-card.is-revealed .scratch-result strong {
+  animation: name-reveal 0.8s 0.1s both cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes card-reveal {
+  from {
+    opacity: 0.2;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes name-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.preview-card-interactive {
+  width: min(100% - 48px, 420px);
+  padding: 0;
+  background: none;
+  box-shadow: 0 24px 55px #28473d25;
+  transform: rotate(3deg);
+  border-radius: 14px;
+}
+.experience-preview:hover .preview-card-interactive,
+.experience-preview:focus-within .preview-card-interactive {
+  transform: rotate(0) translateY(-4px);
+}
+.preview-card-interactive .scratch-shell {
+  margin: 0;
+  padding: 26px 22px;
+  background: #925360;
+}
+.preview-card-interactive .scratch-shell h2 {
+  font-size: 28px;
+}
+.preview-card-interactive .scratch-shell > p {
+  font-size: 14px;
+  margin: 0;
+}
+.preview-card-interactive .scratch-card {
+  height: 150px;
+  margin: 16px auto 7px;
+}
+.preview-card-interactive .scratch-result strong {
+  font-size: 27px;
+}
+.preview-card-interactive .scratch-result small {
+  font-size: 11px;
+}
+.preview-spark,
+.preview-note {
+  pointer-events: none;
+}
+.wish-panel {
+  position: relative;
+  overflow: hidden;
+}
+.wish-panel:before {
+  content: "";
+  display: block;
+  height: 5px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+.wish-panel-mine {
+  background: #fffaf7;
+  border-color: #eddeda;
+}
+.wish-panel-mine:before {
+  background: #bd7b7b;
+}
+.wish-panel-mine .kicker {
+  color: #98515c;
+}
+.wish-panel-theirs {
+  background: #f4f8f3;
+  border-color: #d5e4d8;
+}
+.wish-panel-theirs:before {
+  background: #779b83;
+}
+.wish-panel-theirs .kicker {
+  color: #557c65;
+}
+.wish-panel-mine h2,
+.wish-panel-theirs h2 {
+  color: #26473e;
+}
+.unread-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f4e3e5;
+  color: #86404d;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 18px;
+}
+.notification-prompt {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 20px;
+  background: #f1ece6;
+  color: #675647;
+  border: 1px solid #e9ded1;
+  border-radius: 10px;
+  margin-top: 16px;
+  font-size: 14px;
+}
+.notification-prompt > svg {
+  flex: none;
+  color: #a14e59;
+}
+.notification-prompt span {
+  flex: 1;
+}
+.notification-prompt .btn {
+  min-height: 42px;
+  padding: 10px 14px;
+}
+@media (max-width: 600px) {
+  .notification-prompt {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .notification-prompt span {
+    flex: 1 1 calc(100% - 45px);
+  }
+  .notification-prompt .btn {
+    margin-left: 33px;
+  }
+  .preview-card-interactive {
+    width: min(100% - 28px, 370px);
+  }
+  .preview-card-interactive .scratch-shell {
+    padding: 22px 15px;
+  }
+  .preview-card-interactive .scratch-shell h2 {
+    font-size: 25px;
+  }
+  .preview-card-interactive .scratch-card {
+    height: 140px;
+  }
+  .preview-card-interactive .scratch-result strong {
+    font-size: 23px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scratch-card.is-revealed .scratch-result,
+  .scratch-card.is-revealed .scratch-result strong {
+    animation: none;
+  }
+  .experience-preview:focus-within .preview-card-interactive {
+    transform: none;
+  }
+}
+/* Keep the scratch surface aligned with pointer coordinates. */
+.preview-card-interactive {
+  transform: none;
+}
+.experience-preview:hover .preview-card-interactive,
+.experience-preview:focus-within .preview-card-interactive {
+  transform: translateY(-4px);
+}

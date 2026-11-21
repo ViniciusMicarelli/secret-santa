@@ -1,0 +1,7 @@
+create table if not exists users(id bigserial primary key, username text unique not null, name text not null, password text not null);
+create table if not exists sessions(token text primary key,user_id bigint references users(id) on delete cascade,expires_at timestamptz not null);
+create table if not exists groups(id bigserial primary key,name text not null,description text not null default '', event_date text not null default '', budget text not null default '', owner_id bigint references users(id), invite text unique not null, status text not null default 'open', scheduled_at timestamptz, created_at timestamptz default now());
+create table if not exists members(group_id bigint references groups(id) on delete cascade,user_id bigint references users(id),family text not null default '', primary key(group_id,user_id));
+create table if not exists results(group_id bigint references groups(id) on delete cascade,giver bigint references users(id),recipient bigint references users(id),primary key(group_id,giver),unique(group_id,recipient));
+create table if not exists wishes(id bigserial primary key,group_id bigint references groups(id) on delete cascade,user_id bigint references users(id),title text not null,detail text not null default '',link text not null default '');
+create table if not exists messages(id bigserial primary key,group_id bigint references groups(id) on delete cascade,giver bigint references users(id),sender bigint references users(id),content text not null,created_at timestamptz default now());

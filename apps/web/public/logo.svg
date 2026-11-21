@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+<title id="title">Entre Nós — presente e encontro</title>
+<rect x="5" y="5" width="54" height="54" rx="18" fill="#dfc9a5"/>
+<path d="M17 30h30v17a4 4 0 0 1-4 4H21a4 4 0 0 1-4-4V30Z" fill="#24483e"/>
+<rect x="14" y="25" width="36" height="9" rx="3" fill="#24483e"/>
+<path d="M29 25h6v26h-6z" fill="#dfc9a5"/>
+<path d="M32 25c-3.3-6-10.9-8.7-12.3-4.8C18.4 24 24 26 32 25Zm0 0c3.3-6 10.9-8.7 12.3-4.8C45.6 24 40 26 32 25Z" fill="none" stroke="#24483e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M48.5 12v7M45 15.5h7" stroke="#a14e59" stroke-width="2.2" stroke-linecap="round"/>
+</svg>
