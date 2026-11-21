@@ -648,3 +648,90 @@ input {
 .report-success {
   color: #38533b;
 }
+
+/* Decorative marks use consistent vector icons across browsers and phones. */
+.holiday-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.holiday-banner svg {
+  flex: none;
+}
+.hero-star {
+  width: 0.36em;
+  height: 0.36em;
+  stroke-width: 1.6;
+}
+.avatars b:last-child {
+  display: grid;
+  place-items: center;
+}
+.art-spark {
+  width: 30px;
+  height: 30px;
+  stroke-width: 1.5;
+}
+.art-spark.s2 {
+  width: 20px;
+  height: 20px;
+}
+.gift-surprise {
+  width: 54px;
+  height: 54px;
+  stroke-width: 1.5;
+}
+.gift-tag svg,
+.art-bottom svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+.marquee svg {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin: 0 18px;
+  color: #e4c39a;
+}
+.cta-star {
+  width: clamp(100px, 18vw, 210px);
+  height: auto;
+  stroke-width: 0.8;
+}
+.scratch-shell:before,
+.scratch-shell:after {
+  content: none;
+}
+@media (max-width: 800px) {
+  .holiday-banner {
+    gap: 6px;
+    font-size: 8px;
+    text-align: center;
+  }
+  .holiday-banner svg {
+    width: 11px;
+    height: 11px;
+  }
+  .art-spark.s1 {
+    left: 4%;
+    top: 15%;
+  }
+  .art-spark.s2 {
+    right: 5%;
+    top: 25%;
+  }
+  .cta-star {
+    width: 90px;
+    opacity: 0.22;
+  }
+}
+.hero-star {
+  font-size: inherit;
+}
+@media (max-width: 800px) {
+  .landing .hero-art {
+    margin-top: 56px;
+  }
+}

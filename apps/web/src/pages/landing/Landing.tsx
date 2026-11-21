@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import {
   CalendarDays,
   Gift,
+  Heart,
+  Sparkles,
+  Star,
   LockKeyhole,
   Menu,
   MessageCircle,
@@ -99,6 +102,20 @@ export function Landing({ user }: { user: User | null }) {
         stagger: 0.14,
         ease: "power3.out",
       });
+      // Reveal each section as it enters view, including long mobile layouts.
+      gsap.utils
+        .toArray<HTMLElement>(
+          ".frost-copy > *, .frosted-card, .experience-copy > :not(h2), .experience-preview, .faq details, .cta > div:first-child > :not(h2), .footer > *",
+        )
+        .forEach((element) => {
+          gsap.from(element, {
+            scrollTrigger: { trigger: element, start: "top 92%", once: true },
+            y: 22,
+            opacity: 0,
+            duration: 0.7,
+            ease: "power2.out",
+          });
+        });
       gsap.from(".feature-list article", {
         scrollTrigger: {
           trigger: ".feature-list",
@@ -123,7 +140,8 @@ export function Landing({ user }: { user: User | null }) {
       <Intro />
       <Snow />
       <div className="holiday-banner">
-        ✦ &nbsp; UMA TEMPORADA FEITA PARA ESTAR JUNTO &nbsp; ✦
+        <Sparkles size={13} aria-hidden="true" /> UMA TEMPORADA FEITA PARA ESTAR
+        JUNTO <Sparkles size={13} aria-hidden="true" />
       </div>
       <header className="nav wrap">
         <Brand />
@@ -171,7 +189,7 @@ export function Landing({ user }: { user: User | null }) {
               <span className="headline-line">
                 <span>
                   <em>estar junto.</em>
-                  <span className="hero-star">✳</span>
+                  <Sparkles className="hero-star" aria-hidden="true" />
                 </span>
               </span>
             </h1>
@@ -195,7 +213,9 @@ export function Landing({ user }: { user: User | null }) {
                 <b>A</b>
                 <b>M</b>
                 <b>J</b>
-                <b>✳</b>
+                <b>
+                  <Heart size={15} aria-hidden="true" />
+                </b>
               </div>
               <span>
                 Para amigos, família
@@ -216,8 +236,8 @@ export function Landing({ user }: { user: User | null }) {
             </div>
             <div className="orbit orbit-one" />
             <div className="orbit orbit-two" />
-            <div className="art-spark s1">✳</div>
-            <div className="art-spark s2">✦</div>
+            <Sparkles className="art-spark s1" aria-hidden="true" />
+            <Star className="art-spark s2" aria-hidden="true" />
             <div className="art-label">
               UMA BOA SURPRESA
               <br />
@@ -225,9 +245,7 @@ export function Landing({ user }: { user: User | null }) {
             </div>
             <div className="gift-shadow" />
             <div className="gift-glow" aria-hidden="true" />
-            <div className="gift-surprise" aria-hidden="true">
-              ✦
-            </div>
+            <Sparkles className="gift-surprise" aria-hidden="true" />
             <div className="gift-box">
               <div className="ribbon-v" />
               <div className="gift-lid">
@@ -239,19 +257,22 @@ export function Landing({ user }: { user: User | null }) {
               <div className="gift-tag">
                 feito com
                 <br />
-                <strong>carinho</strong> ♥
+                <strong>carinho</strong> <Heart size={11} aria-hidden="true" />
               </div>
             </div>
             <div className="art-bottom">
-              GUARDE ESSE SEGREDO <span>✳</span> ESPALHE ALEGRIA
+              GUARDE ESSE SEGREDO <Sparkles size={11} aria-hidden="true" />{" "}
+              ESPALHE ALEGRIA
             </div>
           </div>
         </section>
         <div className="marquee">
           <div>
-            BOAS PESSOAS <span>✳</span> BOAS SURPRESAS <span>✳</span> BONS
-            MOMENTOS <span>✳</span> BOAS PESSOAS <span>✳</span> BOAS SURPRESAS{" "}
-            <span>✳</span>
+            BOAS PESSOAS <Sparkles aria-hidden="true" /> BOAS SURPRESAS{" "}
+            <Sparkles aria-hidden="true" /> BONS MOMENTOS{" "}
+            <Sparkles aria-hidden="true" /> BOAS PESSOAS{" "}
+            <Sparkles aria-hidden="true" /> BOAS SURPRESAS{" "}
+            <Sparkles aria-hidden="true" />
           </div>
         </div>
         <section id="como" className="section light">
@@ -340,7 +361,7 @@ export function Landing({ user }: { user: User | null }) {
         <section className="experience-section">
           <div className="wrap experience-grid">
             <div className="experience-copy">
-              <div className="kicker">ABRA COM CUIDADO ✦</div>
+              <div className="kicker">ABRA COM CUIDADO</div>
               <h2>
                 O segredo é<br />
                 <em>seu para revelar.</em>
@@ -365,7 +386,6 @@ export function Landing({ user }: { user: User | null }) {
               <div className="preview-card preview-card-interactive">
                 <ScratchCard name="Alguém especial" demo />
               </div>
-              <div className="preview-spark">✳</div>
             </div>
           </div>
         </section>
@@ -491,13 +511,13 @@ export function Landing({ user }: { user: User | null }) {
               Criar meu grupo
             </Link>
           </div>
-          <div className="cta-star">✳</div>
+          <Sparkles className="cta-star" aria-hidden="true" />
         </section>
       </main>
       <footer className="footer wrap">
         <Brand />
         <p>Feito para aproximar pessoas. Mesmo de longe.</p>
-        <a href="#como">Voltar ao início ↑</a>
+        <a href="#como">Voltar ao início</a>
       </footer>
     </div>
   );

@@ -21,7 +21,7 @@ export function ScratchCard({ name, demo = false }: Props) {
     ctx.fillStyle = "#513f27";
     ctx.font = "bold 17px Georgia";
     ctx.textAlign = "center";
-    ctx.fillText("✦  RASPE PARA DESCOBRIR  ✦", 210, 86);
+    ctx.fillText("RASPE PARA DESCOBRIR", 210, 86);
     ctx.font = "13px sans-serif";
     ctx.fillText("uma surpresa espera por você", 210, 111);
   }, [revealed]);
@@ -59,7 +59,7 @@ export function ScratchCard({ name, demo = false }: Props) {
   return (
     <div className={demo ? "scratch-shell scratch-demo" : "scratch-shell"}>
       <div className="scratch-heading">
-        {demo ? "UMA PRÉVIA PARA VOCÊ" : "UMA SURPRESA SÓ SUA"} <span>✦</span>
+        {demo ? "UMA PRÉVIA PARA VOCÊ" : "UMA SURPRESA SÓ SUA"}
       </div>
       <h2>{demo ? "Experimente a surpresa." : "Seu segredo está aqui."}</h2>
       <p>
@@ -71,7 +71,7 @@ export function ScratchCard({ name, demo = false }: Props) {
         <div className="scratch-result" aria-hidden={!revealed}>
           <span>{demo ? "EXEMPLO DE RESULTADO" : "VOCÊ TIROU"}</span>
           <strong>{name}</strong>
-          <small>Agora é hora de preparar uma surpresa ✨</small>
+          <small>Agora é hora de preparar uma surpresa</small>
         </div>
         {!revealed && (
           <canvas
