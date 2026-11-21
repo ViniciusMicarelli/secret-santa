@@ -7,7 +7,7 @@ import {
   saoPauloToISOString,
 } from "../../../shared/time/saoPaulo";
 import { api } from "../../../shared/api/client";
-import { ScratchCard } from "../../../features/reveal/ScratchCard";
+import { GiftJar } from "../../../features/reveal/GiftJar";
 import type { Group, User } from "../../../shared/types";
 type Props = {
   group: Group;
@@ -141,7 +141,7 @@ export function GroupOverview({
               </div>
             )}
           </div>
-          {g.targetId > 0 && <ScratchCard name={g.targetName} />}
+          {g.targetId > 0 && <GiftJar name={g.targetName} />}
         </div>
         <aside>
           <div className="panel">

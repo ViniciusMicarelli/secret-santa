@@ -15,7 +15,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { Brand } from "../../shared/ui/Brand";
 import type { User } from "../../shared/types";
-import { Snow } from "./Snow";
+import { Snow } from "../../shared/ui/Snow";
 import { FrostedCard } from "../../components/ui/frosted-card";
 import { Intro } from "./Intro";
 import { ScratchCard } from "../../features/reveal/ScratchCard";

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { api } from "../api/client";
 import { Brand } from "./Brand";
+import { Snow } from "./Snow";
 
 export function Shell({ children }: { children: ReactNode }) {
   const [pending, setPending] = useState(false);
@@ -20,6 +21,7 @@ export function Shell({ children }: { children: ReactNode }) {
   }
   return (
     <div className="app-shell">
+      <Snow />
       <header className="app-nav">
         <div className="wrap">
           <Brand />
