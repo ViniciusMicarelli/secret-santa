@@ -150,12 +150,8 @@
   background: linear-gradient(130deg, #779071, #36563f);
 }
 @media (hover: hover) {
-  .bowl-envelope:hover {
-    z-index: 9;
-  }
   .bowl-envelope:hover .envelope-face {
-    transform: translateY(-6px) scale(1.16);
-    filter: brightness(1.15);
+    filter: brightness(1.12);
   }
 }
 .bowl-envelope:focus-visible {

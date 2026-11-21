@@ -9,19 +9,18 @@ import gsap from "gsap";
 import { Hand, RotateCcw, Sparkles } from "lucide-react";
 
 // Decorative envelopes are independent of the number of people in the group.
-const envelopes = Array.from({ length: 24 }, (_, index) => ({
-  x: 0.23 + (index % 8) * 0.077 + (((index * 7) % 5) - 2) * 0.005,
-  y: 0.66 + Math.floor(index / 8) * 0.075,
+const envelopes = Array.from({ length: 48 }, (_, index) => ({
+  x: 0.21 + (index % 8) * 0.083 + (((index * 7) % 5) - 2) * 0.006,
+  y: 0.47 + Math.floor(index / 8) * 0.076 + (((index * 11) % 5) - 2) * 0.004,
   rotation: ((index * 23) % 55) - 27,
   green: (index + Math.floor(index / 8)) % 2 === 0,
 }));
 type Particle = {
   x: number;
   y: number;
-  vx: number;
-  vy: number;
+  targetX: number;
+  targetY: number;
   rotation: number;
-  spin: number;
 };
 
 export function GiftJar({ name }: { name: string }) {
@@ -31,7 +30,7 @@ export function GiftJar({ name }: { name: string }) {
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const animating = useRef(false);
   const particles = useRef<Particle[]>(
-    envelopes.map((p) => ({ ...p, vx: 0, vy: 0, spin: 0 })),
+    envelopes.map((p) => ({ ...p, targetX: p.x, targetY: p.y })),
   );
   const gesture = useRef<{
     x: number;
@@ -43,6 +42,7 @@ export function GiftJar({ name }: { name: string }) {
   } | null>(null);
   const suppressClick = useRef(false);
   const reduced = useRef(false);
+  const mouseHeld = useRef(false);
   useEffect(() => {
     if (revealed) return;
     reduced.current = window.matchMedia(
@@ -50,55 +50,21 @@ export function GiftJar({ name }: { name: string }) {
     ).matches;
     if (reduced.current) return;
     let frame = 0;
-    let previous = 0;
-    function tick(time: number) {
-      const elapsed = previous ? Math.min((time - previous) / 16.67, 2) : 1;
-      previous = time;
-      if (!animating.current) {
+    function tick() {
+      if (!animating.current && !mouseHeld.current) {
         const items = particles.current;
-        for (const p of items) {
-          p.vy += 0.0006 * elapsed;
-          p.vx *= Math.pow(0.98, elapsed);
-          p.vy *= Math.pow(0.99, elapsed);
-          p.x += p.vx * elapsed;
-          p.y += p.vy * elapsed;
-          p.rotation += p.spin * elapsed;
-          p.spin *= Math.pow(0.97, elapsed);
-          p.x = Math.max(0.16, Math.min(0.84, p.x));
-          const floor = 0.92 - 0.25 * Math.pow((p.x - 0.5) / 0.5, 2);
-          if (p.y > floor) {
-            p.y = floor;
-            p.vy *= -0.25;
-            p.vx *= 0.93;
-            p.spin *= 0.9;
-          }
-          if (p.y < 0.3) {
-            p.y = 0.3;
-            p.vy = Math.abs(p.vy) * 0.3;
-          }
-        }
-        for (let i = 0; i < items.length; i++)
-          for (let j = i + 1; j < items.length; j++) {
-            const a = items[i],
-              b = items[j],
-              dx = b.x - a.x,
-              dy = (b.y - a.y) * 0.8;
-            const distance = Math.hypot(dx, dy) || 0.001;
-            if (distance < 0.08) {
-              const force = ((0.08 - distance) * 0.15) / distance;
-              a.x -= dx * force;
-              b.x += dx * force;
-              a.y -= dy * force;
-              b.y += dy * force;
-            }
-          }
         root.current
           ?.querySelectorAll<HTMLElement>(".bowl-envelope")
           .forEach((element, i) => {
             const p = items[i];
-            element.style.setProperty("--x", `${p.x * 100}%`);
-            element.style.setProperty("--y", `${p.y * 100}%`);
-            element.style.setProperty("--rotate", `${p.rotation}deg`);
+            const dx = p.targetX - p.x,
+              dy = p.targetY - p.y;
+            if (Math.abs(dx) + Math.abs(dy) > 0.00005) {
+              p.x += dx * 0.075;
+              p.y += dy * 0.075;
+              element.style.setProperty("--x", `${p.x * 100}%`);
+              element.style.setProperty("--y", `${p.y * 100}%`);
+            }
           });
       }
       frame = requestAnimationFrame(tick);
@@ -115,20 +81,22 @@ export function GiftJar({ name }: { name: string }) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width,
       y = (event.clientY - rect.top) / rect.height;
-    const dx = Math.max(-0.018, Math.min(0.018, deltaX / rect.width));
-    const dy = Math.max(-0.018, Math.min(0.018, deltaY / rect.height));
+    const dx = Math.max(-0.003, Math.min(0.003, (deltaX / rect.width) * 0.12));
+    const dy = Math.max(-0.002, Math.min(0.002, (deltaY / rect.height) * 0.08));
     for (const p of particles.current) {
       const distance = Math.hypot(p.x - x, (p.y - y) * 0.8);
-      if (distance < 0.2) {
-        const strength = 1 - distance / 0.2;
-        p.vx += dx * strength * 0.55;
-        p.vy += (dy * 0.35 - 0.003) * strength;
-        p.spin += dx * strength * 40;
+      if (distance < 0.15) {
+        const strength = 1 - distance / 0.15;
+        p.targetX = Math.max(0.18, Math.min(0.82, p.targetX + dx * strength));
+        p.targetY = Math.max(0.43, Math.min(0.86, p.targetY + dy * strength));
       }
     }
   }
   function pointerDown(event: ReactPointerEvent<HTMLDivElement>) {
-    if (event.pointerType === "mouse") return;
+    if (event.pointerType === "mouse") {
+      mouseHeld.current = true;
+      return;
+    }
     const button = (event.target as HTMLElement).closest<HTMLElement>(
       "[data-envelope]",
     );
@@ -151,7 +119,7 @@ export function GiftJar({ name }: { name: string }) {
       ) > 8
     )
       gesture.current.moved = true;
-    if (event.pointerType === "mouse")
+    if (event.pointerType === "mouse" && !mouseHeld.current)
       stir(event, event.movementX, event.movementY);
     else if (gesture.current) {
       const dx = event.clientX - gesture.current.lastX,
@@ -162,6 +130,7 @@ export function GiftJar({ name }: { name: string }) {
     }
   }
   function pointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    mouseHeld.current = false;
     const current = gesture.current;
     if (!current) return;
     gesture.current = null;
@@ -259,9 +228,13 @@ export function GiftJar({ name }: { name: string }) {
             className="bowl-glass"
             onPointerDown={pointerDown}
             onPointerMove={pointerMove}
+            onPointerLeave={(event) => {
+              if (event.pointerType === "mouse") mouseHeld.current = false;
+            }}
             onPointerUp={pointerUp}
             onPointerCancel={() => {
               gesture.current = null;
+              mouseHeld.current = false;
             }}
           >
             <div className="bowl-shine" aria-hidden="true" />
@@ -306,7 +279,7 @@ export function GiftJar({ name }: { name: string }) {
           <span className="sr-only" aria-live="polite">
             {busy
               ? "Abrindo seu envelope..."
-              : "Escolha um dos 24 envelopes para revelar seu resultado."}
+              : "Escolha um dos envelopes para revelar seu resultado."}
           </span>
         </div>
       ) : (
