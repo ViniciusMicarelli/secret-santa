@@ -391,3 +391,27 @@
     will-change: auto;
   }
 }
+
+/* iOS date controls have an intrinsic minimum width larger than their container. */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-inline-size: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="date"]::-webkit-date-and-time-value,
+input[type="datetime-local"]::-webkit-date-and-time-value,
+input[type="time"]::-webkit-date-and-time-value {
+  text-align: left;
+}
+.form-grid > label,
+.detail-grid > *,
+.detail-grid label {
+  min-width: 0;
+}
