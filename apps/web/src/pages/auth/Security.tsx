@@ -42,9 +42,17 @@ export function Security() {
           {codes.length > 0 && (
             <div className="recovery-codes" role="status">
               <strong>Guarde estes códigos agora</strong>
-              {codes.map((c) => (
-                <code key={c}>{c}</code>
-              ))}
+              <p>
+                Cada linha contém um código independente, válido para uma única
+                recuperação.
+              </p>
+              <ol className="recovery-code-list">
+                {codes.map((c) => (
+                  <li key={c}>
+                    <code>{c}</code>
+                  </li>
+                ))}
+              </ol>
               <button
                 className="btn btn-outline"
                 onClick={() => navigator.clipboard.writeText(codes.join("\n"))}

@@ -59,17 +59,17 @@ export function BrandMark({ className = "" }: { className?: string }) {
       aria-hidden="true"
       focusable="false"
     >
-      <rect x="5" y="5" width="54" height="54" rx="18" fill="#dfc9a5" />
+      <rect x="5" y="5" width="54" height="54" rx="18" fill="#f0d8b4" />
       <path
         d="M17 30h30v17a4 4 0 0 1-4 4H21a4 4 0 0 1-4-4V30Z"
-        fill="#24483e"
+        fill="#752c25"
       />
-      <rect x="14" y="25" width="36" height="9" rx="3" fill="#24483e" />
-      <path d="M29 25h6v26h-6z" fill="#dfc9a5" />
+      <rect x="14" y="25" width="36" height="9" rx="3" fill="#752c25" />
+      <path d="M29 25h6v26h-6z" fill="#f0d8b4" />
       <path
         className="brand-bow"
         d="M32 25c-3.3-6-10.9-8.7-12.3-4.8C18.4 24 24 26 32 25Zm0 0c3.3-6 10.9-8.7 12.3-4.8C45.6 24 40 26 32 25Z"
-        stroke="#24483e"
+        stroke="#752c25"
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -77,7 +77,7 @@ export function BrandMark({ className = "" }: { className?: string }) {
       <path
         className="brand-spark"
         d="M48.5 12v7M45 15.5h7"
-        stroke="#a14e59"
+        stroke="#38533b"
         strokeWidth="2.2"
         strokeLinecap="round"
       />

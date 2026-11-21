@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  ArrowUpRight,
   CalendarDays,
   Gift,
   LockKeyhole,
@@ -17,6 +16,7 @@ import Lenis from "lenis";
 import { Brand } from "../../shared/ui/Brand";
 import type { User } from "../../shared/types";
 import { Snow } from "./Snow";
+import { FrostedCard } from "../../components/ui/frosted-card";
 import { Intro } from "./Intro";
 import { ScratchCard } from "../../features/reveal/ScratchCard";
 gsap.registerPlugin(ScrollTrigger);
@@ -151,7 +151,7 @@ export function Landing({ user }: { user: User | null }) {
             className="btn btn-small btn-light"
             to={user ? "/app" : "/criar-conta"}
           >
-            Começar <ArrowUpRight size={16} />
+            Começar
           </Link>
         </nav>
       </header>
@@ -184,10 +184,10 @@ export function Landing({ user }: { user: User | null }) {
                 className="btn btn-pink"
                 to={user ? "/app" : "/criar-conta"}
               >
-                Criar meu grupo <ArrowUpRight size={18} />
+                Criar meu grupo
               </Link>
               <a className="text-link" href="#como">
-                Descubra como funciona <span>↓</span>
+                Descubra como funciona
               </a>
             </div>
             <div className="hero-note">
@@ -221,7 +221,7 @@ export function Landing({ user }: { user: User | null }) {
             <div className="art-label">
               UMA BOA SURPRESA
               <br />
-              <strong>ESTÁ A CAMINHO</strong> <span>↗</span>
+              <strong>ESTÁ A CAMINHO</strong>
             </div>
             <div className="gift-shadow" />
             <div className="gift-glow" aria-hidden="true" />
@@ -316,6 +316,27 @@ export function Landing({ user }: { user: User | null }) {
             </div>
           </div>
         </section>
+        <section className="frost-section light">
+          <div className="wrap frost-layout">
+            <div className="frost-copy">
+              <div className="kicker">É SOBRE ESTAR PRESENTE</div>
+              <h2>
+                Os melhores presentes <em>aproximam.</em>
+              </h2>
+              <p>
+                Um encontro, uma surpresa e mais uma história para guardar.
+                Celebre do seu jeito, com quem faz parte dele.
+              </p>
+            </div>
+            <FrostedCard
+              imageUrl="https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=1100&q=80"
+              alt="Luzes e enfeites de Natal"
+              preTitle="UM NATAL PARA LEMBRAR"
+              title="Juntos é melhor."
+              date="feito com carinho"
+            />
+          </div>
+        </section>
         <section className="experience-section">
           <div className="wrap experience-grid">
             <div className="experience-copy">
@@ -332,7 +353,7 @@ export function Landing({ user }: { user: User | null }) {
                 className="btn btn-navy"
                 to={user ? "/app" : "/criar-conta"}
               >
-                Quero participar <ArrowUpRight size={17} />
+                Quero participar
               </Link>
             </div>
             <div className="experience-preview">
@@ -367,7 +388,7 @@ export function Landing({ user }: { user: User | null }) {
                 className="btn btn-light"
                 to={user ? "/app" : "/criar-conta"}
               >
-                Começar agora <ArrowUpRight size={17} />
+                Começar agora
               </Link>
             </div>
             <div className="feature-list">
@@ -382,7 +403,6 @@ export function Landing({ user }: { user: User | null }) {
                     identidade.
                   </p>
                 </div>
-                <b>↗</b>
               </article>
               <article>
                 <span>
@@ -395,7 +415,6 @@ export function Landing({ user }: { user: User | null }) {
                     presentear você.
                   </p>
                 </div>
-                <b>↗</b>
               </article>
               <article>
                 <span>
@@ -408,7 +427,6 @@ export function Landing({ user }: { user: User | null }) {
                     brincadeira.
                   </p>
                 </div>
-                <b>↗</b>
               </article>
             </div>
           </div>
@@ -470,7 +488,7 @@ export function Landing({ user }: { user: User | null }) {
             </h2>
             <p>As melhores histórias começam com pessoas reunidas.</p>
             <Link className="btn btn-light" to={user ? "/app" : "/criar-conta"}>
-              Criar meu grupo <ArrowUpRight size={18} />
+              Criar meu grupo
             </Link>
           </div>
           <div className="cta-star">✳</div>

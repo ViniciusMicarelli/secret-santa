@@ -1,0 +1,650 @@
+/* Vintage Christmas stationery: warm paper, cranberry ink and evergreen accents. */
+:root {
+  --navy: #54251f;
+  --blue: #902b27;
+  --pink: #902b27;
+  --paper: #f8eddb;
+  color: #54251f;
+  background: #f8eddb;
+}
+body {
+  background: #f8eddb;
+}
+.landing {
+  background: #f6e9d5;
+  color: #60251f;
+}
+.holiday-banner {
+  background: #872521;
+  color: #fff4e3;
+}
+.landing .nav {
+  border-color: #8c3b3033;
+}
+.landing .brand,
+.landing .navlinks a {
+  color: #672923;
+}
+.landing .brand-dot {
+  color: #9b2925;
+}
+.landing .navlinks .btn-light {
+  background: #872521;
+  color: #fff9ed;
+}
+.mobile-menu {
+  color: #732b24;
+}
+.landing .hero {
+  color: #60251f;
+}
+.hero h1,
+.landing .hero h1 {
+  color: #64261f;
+}
+.landing .hero h1 em {
+  color: #982d27;
+}
+.hero-star,
+.hero-star:last-child {
+  color: #a64230;
+}
+.eyebrow {
+  color: #875d49;
+}
+.dot {
+  background: #a43f2b;
+}
+.hero-copy > p {
+  color: #775448;
+}
+.hero-note {
+  color: #886656;
+}
+.hero-actions .text-link {
+  color: #732c25;
+}
+.hero-actions .text-link span {
+  color: #a2382a;
+}
+.btn-pink {
+  background: #932d27;
+  color: #fffaf1;
+}
+.btn-pink:hover {
+  background: #73211f;
+}
+.btn-navy {
+  background: #763028;
+  color: #fffaf1;
+}
+.btn-navy:hover {
+  background: #5b211d;
+}
+.btn-light {
+  background: #fffaf0;
+  color: #713029;
+}
+.avatars b {
+  border-color: #f6e9d5;
+  background: #ecd3b6;
+  color: #712c25;
+}
+.avatars b:nth-child(2) {
+  background: #bd765d;
+  color: #fffaf0;
+}
+.avatars b:nth-child(3) {
+  background: #d5c2a2;
+  color: #563e27;
+}
+.avatars b:last-child {
+  background: #31503c;
+  color: #fffaf0;
+}
+.hero-art {
+  background: radial-gradient(
+    ellipse at center,
+    #e7c9a6 0%,
+    #eedac0 42%,
+    transparent 72%
+  );
+}
+.orbit {
+  border-color: #a34a353f;
+}
+.gift-box {
+  background: linear-gradient(135deg, #b74435, #86231e);
+  box-shadow:
+    inset -25px -15px 0 #7c221f,
+    0 35px 55px #6f392a30;
+}
+.gift-lid {
+  background: #be5140;
+  box-shadow: 0 12px 0 #852620;
+}
+.ribbon-v {
+  background: #f0d5aa;
+}
+.ribbon-top {
+  background: #f7dfba;
+}
+.bow {
+  border-color: #ecd0a3;
+}
+.bow-knot {
+  background: #f6debb;
+}
+.gift-shadow {
+  background: #693b2c55;
+}
+.gift-tag {
+  background: #fff8e9;
+  color: #6b3026;
+}
+.gift-glow {
+  background: radial-gradient(ellipse, #fff0c0, transparent 70%);
+}
+.gift-surprise,
+.art-spark {
+  color: #a43d2e;
+}
+.holiday-seal {
+  color: #854431;
+  border-color: #a55b42;
+}
+.art-label,
+.art-bottom {
+  color: #936a57;
+}
+.art-label strong {
+  color: #6e3027;
+}
+.art-label span,
+.art-bottom span {
+  color: #a53d2e;
+}
+.marquee {
+  background: #852623;
+  color: #fff5e6;
+}
+.marquee span {
+  color: #e4c39a;
+}
+.light {
+  background: #f8eddb;
+  color: #5b2721;
+}
+.kicker {
+  color: #8e543f;
+}
+.pink,
+.brand-dot {
+  color: #982d27;
+}
+.section h2,
+.experience-copy h2 {
+  color: #5d2720;
+}
+.section-head > p,
+.steps p,
+.faq-grid > div > p {
+  color: #805c4c;
+}
+.steps article {
+  background: #fff8e9;
+  border: 1px solid #dfc5a7;
+  box-shadow: 0 10px 30px #6835280a;
+}
+.step-num {
+  color: #a27059;
+}
+.step-icon {
+  background: #e7e8d8;
+  color: #35523c;
+}
+.step-icon.blue {
+  background: #f3dfc4;
+  color: #9a5835;
+}
+.step-icon.pink-bg {
+  background: #f4dcd2;
+  color: #982f28;
+}
+.experience-section {
+  background: #eee0c9;
+  color: #5b2721;
+}
+.experience-copy h2 em {
+  color: #9b2c27;
+}
+.experience-copy p {
+  color: #805c4c;
+}
+.experience-preview {
+  background: #e7cfb1;
+}
+.preview-note {
+  color: #87594a;
+}
+.preview-spark {
+  color: #982f28;
+}
+.features {
+  background: #6d2923;
+  color: #fff6e9;
+}
+.features h2 {
+  color: #fff6e9;
+}
+.features h2 em {
+  color: #ecd0a6;
+}
+.feature-intro,
+.feature-list p {
+  color: #f0ded0;
+}
+.feature-list article > span {
+  color: #efd0a4;
+  border-color: #f4ddc766;
+}
+.feature-list b {
+  color: #e0b78d;
+}
+.faq summary svg {
+  color: #972d27;
+}
+.faq details {
+  border-color: #dec6ad;
+}
+.faq details p {
+  color: #805c4c;
+}
+.cta {
+  background: #8d2a25;
+  color: #fff7e9;
+}
+.cta h2 {
+  color: #fff7e9;
+}
+.cta h2 em {
+  color: #f0d1a5;
+}
+.footer {
+  color: #865f50;
+}
+.footer .brand {
+  color: #642b24;
+}
+.app-nav,
+.auth-page,
+.intro {
+  background: #632820;
+}
+.app-shell {
+  background:
+    radial-gradient(circle at 100% 0%, #f0ddc4 0, transparent 360px), #faf0e1;
+}
+.app-content,
+.auth-card,
+.panel,
+label,
+input {
+  color: #54251f;
+}
+.panel,
+.group-card,
+.empty {
+  background: #fffaf0;
+  border-color: #e8d6be;
+}
+.group-card:after {
+  color: #f4e5d4;
+}
+.group-card h3 {
+  color: #5b2721;
+}
+.security-reminder {
+  background: #f0e8d8;
+  color: #645943;
+}
+.security-reminder a {
+  color: #425c3d;
+}
+.pill {
+  background: #eee8d5;
+  color: #4e6746;
+}
+.member-avatar {
+  background: #ede7d4;
+  color: #4c6244;
+}
+
+.member small,
+.muted {
+  color: #805c4c;
+}
+.tabs button.active,
+.chat-switch button.active {
+  color: #682b24;
+  border-color: #9a3029;
+}
+.tabs button,
+.chat-switch button {
+  color: #927568;
+}
+.card-spark {
+  color: #a33a2d;
+}
+.invite-box {
+  background: #f7ecdd;
+}
+.btn-outline {
+  border-color: #d6b9a4;
+  color: #642b24;
+}
+.auth-card {
+  background: #fffaf0;
+}
+.auth-aside p {
+  color: #f1d9c7;
+}
+.auth-aside h1 em {
+  color: #efd2aa;
+}
+.auth-spark {
+  color: #e8b292;
+}
+.message.mine {
+  background: #e4ebda;
+}
+.messages {
+  background: #f7eee3;
+}
+.scratch-shell,
+.preview-card-interactive .scratch-shell {
+  background: #802923;
+}
+.scratch-heading {
+  color: #f2d0a4;
+}
+.scratch-result {
+  color: #5d2921;
+}
+.scratch-result span {
+  color: #9b322a;
+}
+.scratch-card {
+  background: #fff8e9;
+}
+.wish-panel-mine {
+  background: #fff6ed;
+  border-color: #eacdbb;
+}
+.wish-panel-mine:before {
+  background: #a53a30;
+}
+.wish-panel-mine .kicker {
+  color: #9a3a30;
+}
+.wish-panel-theirs {
+  background: #f3f4e8;
+  border-color: #d7dfc8;
+}
+.wish-panel-theirs:before {
+  background: #617c55;
+}
+.wish-panel-theirs .kicker {
+  color: #4e6d49;
+}
+.wish-panel-mine h2,
+.wish-panel-theirs h2 {
+  color: #5d2b23;
+}
+.unread-badge {
+  background: #f8e3db;
+  color: #8b3028;
+}
+.notification-prompt {
+  background: #f4e7d8;
+  border-color: #e5d1ba;
+  color: #795849;
+}
+.notification-prompt > svg {
+  color: #982f28;
+}
+.recovery-codes {
+  background: #f5eedf;
+  border-color: #ddc5aa;
+}
+.recovery-codes code {
+  color: #5a2a22;
+}
+/* Narrow striped details echo the printed cards without competing with content. */
+.holiday-banner {
+  border-bottom: 5px solid transparent;
+  border-image: repeating-linear-gradient(
+      90deg,
+      #f5dfbf 0 12px,
+      #a2372c 12px 24px
+    )
+    5;
+}
+.steps article {
+  border-top: 5px solid #a33b2c;
+}
+.preview-card-interactive {
+  outline: 8px solid transparent;
+  background: repeating-linear-gradient(
+    90deg,
+    #9a352b 0 12px,
+    #f0d9b9 12px 24px
+  );
+  padding: 8px;
+}
+.experience-preview:hover .preview-card-interactive,
+.experience-preview:focus-within .preview-card-interactive {
+  transform: translateY(-4px);
+}
+.scratch-demo {
+  border: 1px solid #e5c9a4;
+}
+.app-nav .brand-dot,
+.auth-page .brand-dot {
+  color: #f0d2a8;
+}
+.intro-name span {
+  color: #efcfa1;
+}
+@media (max-width: 800px) {
+  .landing .navlinks {
+    background: #733027;
+    border-color: #a45d4d;
+  }
+  .landing .navlinks a {
+    color: #fff6e9;
+  }
+  .landing .navlinks .btn-light {
+    background: #fff7e8;
+    color: #762e27;
+  }
+  .mobile-menu {
+    color: #732b24;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .experience-preview:hover .preview-card-interactive,
+  .experience-preview:focus-within .preview-card-interactive {
+    transform: none;
+  }
+}
+
+/* Clear, calm details and room for the content at every size. */
+.recovery-code-list {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0;
+  padding-left: 2rem;
+}
+.recovery-code-list li {
+  padding-left: 4px;
+}
+.recovery-code-list code {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #fffaf0;
+  border-radius: 5px;
+}
+.recovery-codes p {
+  margin: 0;
+  line-height: 1.5;
+}
+.snow span {
+  background: #fffaf0;
+  opacity: 0.35;
+  box-shadow: 0 0 5px #fff7e5;
+}
+.hero-star {
+  position: static;
+  display: inline-block;
+  margin-left: 0.15em;
+  font-size: 0.35em;
+  vertical-align: top;
+}
+.frost-section {
+  padding: 30px 0 110px;
+}
+.frost-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(35px, 7vw, 100px);
+  align-items: center;
+}
+.frost-copy h2 {
+  max-width: 600px;
+  margin: 18px 0;
+  font:
+    500 clamp(38px, 4.5vw, 70px)/1.05 Georgia,
+    serif;
+  color: #5d2720;
+}
+.frost-copy h2 em {
+  color: #9b2c27;
+}
+.frost-copy p {
+  max-width: 460px;
+  line-height: 1.7;
+  color: #805c4c;
+}
+.frosted-card {
+  height: 390px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #632820;
+  box-shadow: 0 24px 55px #5d272028;
+  perspective: 1000px;
+}
+.frosted-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.2s ease-out;
+}
+.frosted-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.frosted-card-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: start;
+  padding: clamp(24px, 4vw, 48px);
+  color: #fffaf0;
+  background: linear-gradient(0deg, #31130deb, #31130d15 85%);
+}
+.frosted-card-content p {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+}
+.frosted-card-content h2 {
+  margin: 12px 0;
+  font:
+    italic 500 clamp(35px, 4vw, 62px)/1 Georgia,
+    serif;
+}
+.frosted-card-content span {
+  font-size: 12px;
+  opacity: 0.85;
+}
+@media (max-width: 800px) {
+  .frost-layout {
+    grid-template-columns: 1fr;
+  }
+  .frost-section {
+    padding: 0 0 75px;
+  }
+  .frosted-card {
+    height: 320px;
+  }
+  .art-label,
+  .holiday-seal {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .frosted-card-inner {
+    transition: none;
+  }
+}
+
+/* Keep decorative captions away from the interactive scratch card. */
+.preview-note,
+.preview-spark {
+  display: none;
+}
+
+.app-dialog {
+  width: min(480px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  border: 1px solid #e3c7aa;
+  border-radius: 18px;
+  padding: clamp(24px, 5vw, 36px);
+  background: #fffaf0;
+  color: #54251f;
+  box-shadow: 0 24px 80px #35120c55;
+}
+.app-dialog::backdrop {
+  background: #351813a8;
+  backdrop-filter: blur(3px);
+}
+.app-dialog h2 {
+  margin: 12px 0;
+  font:
+    500 32px/1.1 Georgia,
+    serif;
+}
+.app-dialog p {
+  color: #805c4c;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+.app-dialog label {
+  display: grid;
+  gap: 8px;
+}
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+.report-success {
+  color: #38533b;
+}

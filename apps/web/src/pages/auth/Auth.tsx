@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ArrowUpRight } from "lucide-react";
+import gsap from "gsap";
 import { api } from "../../shared/api/client";
 import { Brand } from "../../shared/ui/Brand";
 import type { User } from "../../shared/types";
@@ -20,6 +20,26 @@ export function Auth({
     [busy, SB] = useState(false);
   const nav = useNavigate();
   const loc = useLocation();
+  const page = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const context = gsap.context(() => {
+      gsap.from(".auth-aside > *", {
+        y: 18,
+        opacity: 0,
+        duration: 0.65,
+        stagger: 0.09,
+        ease: "power2.out",
+      });
+      gsap.from(".auth-card", {
+        y: 24,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power2.out",
+      });
+    }, page);
+    return () => context.revert();
+  }, [register]);
   async function submit(e: FormEvent) {
     e.preventDefault();
     SB(true);
@@ -41,7 +61,7 @@ export function Auth({
     }
   }
   return (
-    <div className="auth-page">
+    <div className="auth-page" ref={page}>
       <header className="wrap nav">
         <Brand />
         <Link to="/">Voltar para o início</Link>
@@ -113,8 +133,7 @@ export function Auth({
               </div>
             )}
             <button className="btn btn-pink full" disabled={busy}>
-              {busy ? "Aguarde..." : register ? "Criar minha conta" : "Entrar"}{" "}
-              <ArrowUpRight size={18} />
+              {busy ? "Aguarde..." : register ? "Criar minha conta" : "Entrar"}
             </button>
           </form>
           {register && (

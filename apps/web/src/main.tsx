@@ -6,6 +6,7 @@ import "./styles/christmas.css";
 import "./styles/responsive.css";
 import "./styles/palette.css";
 import "./styles/brand.css";
+import "./styles/friendmas.css";
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <App />
