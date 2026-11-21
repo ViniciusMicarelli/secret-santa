@@ -27,7 +27,6 @@ export function GiftJar({ name }: { name: string }) {
   const [revealed, setRevealed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [shuffling, setShuffling] = useState(false);
-  const shuffleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const root = useRef<HTMLElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const animating = useRef(false);
@@ -83,12 +82,22 @@ export function GiftJar({ name }: { name: string }) {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width,
       y = (event.clientY - rect.top) / rect.height;
-    const dx = Math.max(-0.003, Math.min(0.003, (deltaX / rect.width) * 0.12));
-    const dy = Math.max(-0.002, Math.min(0.002, (deltaY / rect.height) * 0.08));
+    const touch = event.pointerType !== "mouse";
+    const limitX = touch ? 0.009 : 0.003;
+    const limitY = touch ? 0.006 : 0.002;
+    const dx = Math.max(
+      -limitX,
+      Math.min(limitX, (deltaX / rect.width) * (touch ? 0.32 : 0.12)),
+    );
+    const dy = Math.max(
+      -limitY,
+      Math.min(limitY, (deltaY / rect.height) * (touch ? 0.24 : 0.08)),
+    );
+    const radius = touch ? 0.21 : 0.15;
     for (const p of particles.current) {
       const distance = Math.hypot(p.x - x, (p.y - y) * 0.8);
-      if (distance < 0.15) {
-        const strength = 1 - distance / 0.15;
+      if (distance < radius) {
+        const strength = 1 - distance / radius;
         p.targetX = Math.max(0.18, Math.min(0.82, p.targetX + dx * strength));
         p.targetY = Math.max(0.43, Math.min(0.86, p.targetY + dy * strength));
       }
@@ -147,7 +156,6 @@ export function GiftJar({ name }: { name: string }) {
   useEffect(
     () => () => {
       timeline.current?.kill();
-      if (shuffleTimer.current) clearTimeout(shuffleTimer.current);
     },
     [],
   );
@@ -162,28 +170,71 @@ export function GiftJar({ name }: { name: string }) {
     const instant = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    particles.current.forEach((particle, index) => {
-      particle.targetX = destinations[index].x;
-      particle.targetY = destinations[index].y;
-      if (instant) {
-        particle.x = particle.targetX;
-        particle.y = particle.targetY;
-        const element = root.current?.querySelector<HTMLElement>(
-          `[data-envelope="${index}"]`,
-        );
-        element?.style.setProperty("--x", `${particle.x * 100}%`);
-        element?.style.setProperty("--y", `${particle.y * 100}%`);
-      }
-    });
-    if (!instant) {
-      setBusy(true);
-      setShuffling(true);
-      shuffleTimer.current = setTimeout(() => {
+    const elements =
+      root.current?.querySelectorAll<HTMLElement>(".bowl-envelope");
+    if (!elements || elements.length !== particles.current.length) return;
+    const render = (particle: Particle, index: number) => {
+      const element = elements[index];
+      element.style.setProperty("--x", `${particle.x * 100}%`);
+      element.style.setProperty("--y", `${particle.y * 100}%`);
+      element.style.setProperty("--rotate", `${particle.rotation}deg`);
+    };
+    if (instant) {
+      particles.current.forEach((particle, index) => {
+        particle.x = particle.targetX = destinations[index].x;
+        particle.y = particle.targetY = destinations[index].y;
+        render(particle, index);
+      });
+      return;
+    }
+    animating.current = true;
+    setBusy(true);
+    setShuffling(true);
+    timeline.current = gsap.timeline({
+      onComplete: () => {
+        particles.current.forEach((particle) => {
+          particle.targetX = particle.x;
+          particle.targetY = particle.y;
+        });
+        animating.current = false;
         setBusy(false);
         setShuffling(false);
-        shuffleTimer.current = null;
-      }, 1300);
-    }
+      },
+    });
+    particles.current.forEach((particle, index) => {
+      const delay = (index % 8) * 0.035;
+      const destination = destinations[index];
+      const crossingX = Math.max(
+        0.2,
+        Math.min(0.8, 1 - particle.x + ((index % 3) - 1) * 0.035),
+      );
+      const crossingY = Math.max(0.35, particle.y - 0.1 - (index % 4) * 0.015);
+      timeline
+        .current!.to(
+          particle,
+          {
+            x: crossingX,
+            y: crossingY,
+            rotation: envelopes[index].rotation + (index % 2 ? 12 : -12),
+            duration: 0.85,
+            ease: "sine.inOut",
+            onUpdate: () => render(particle, index),
+          },
+          delay,
+        )
+        .to(
+          particle,
+          {
+            x: destination.x,
+            y: destination.y,
+            rotation: envelopes[index].rotation,
+            duration: 0.95,
+            ease: "sine.inOut",
+            onUpdate: () => render(particle, index),
+          },
+          0.85 + delay,
+        );
+    });
   }
   function choose(index: number) {
     if (busy || animating.current || revealed) return;
