@@ -275,7 +275,9 @@ export function GiftJar({ name }: { name: string }) {
           >
             <div className="bowl-shine" aria-hidden="true" />
             <div className="bowl-stars" aria-hidden="true">
-              ✦ <span>✧</span> ✦
+              <Sparkles size={17} />
+              <Sparkles size={12} />
+              <Sparkles size={17} />
             </div>
             {envelopes.map((envelope, index) => (
               <button
@@ -297,7 +299,9 @@ export function GiftJar({ name }: { name: string }) {
                 }
               >
                 <span className="envelope-face" aria-hidden="true">
-                  <i>✦</i>
+                  <i>
+                    <Sparkles size={10} />
+                  </i>
                 </span>
               </button>
             ))}
@@ -333,7 +337,9 @@ export function GiftJar({ name }: { name: string }) {
         <div className="jar-reveal" role="status" aria-live="polite">
           <span className="reveal-envelope" aria-hidden="true">
             <span className="reveal-envelope-flap" />
-            <span className="reveal-envelope-letter">✦</span>
+            <span className="reveal-envelope-letter">
+              <Sparkles size={16} />
+            </span>
           </span>
           <span className="jar-reveal-label">VOCÊ VAI PRESENTEAR</span>
           <strong>{name}</strong>

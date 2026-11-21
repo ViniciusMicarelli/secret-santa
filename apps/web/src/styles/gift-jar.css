@@ -403,3 +403,11 @@
   opacity: 0.7;
   cursor: wait;
 }
+.bowl-stars svg {
+  flex: none;
+}
+.envelope-face i svg,
+.reveal-envelope-letter svg {
+  display: inline-block;
+  vertical-align: middle;
+}

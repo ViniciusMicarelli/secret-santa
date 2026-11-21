@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import gsap from "gsap";
+import { Sparkles } from "lucide-react";
 import { api } from "../../shared/api/client";
 import { Brand } from "../../shared/ui/Brand";
 import type { User } from "../../shared/types";
@@ -79,7 +80,7 @@ export function Auth({
           <p>
             Um lugar para reunir pessoas e criar surpresas que ficam na memória.
           </p>
-          <div className="auth-spark">✳</div>
+          <Sparkles className="auth-spark" aria-hidden="true" />
         </div>
         <div className="auth-card">
           <div className="kicker">

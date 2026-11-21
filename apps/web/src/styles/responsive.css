@@ -148,7 +148,7 @@
   overflow: hidden;
 }
 .group-card:after {
-  content: "✳";
+  content: none;
   position: absolute;
   right: -15px;
   bottom: -48px;

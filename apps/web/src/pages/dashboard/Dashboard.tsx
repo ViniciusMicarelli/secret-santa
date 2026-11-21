@@ -1,7 +1,7 @@
 import { formatCalendarDate } from "../../shared/time/saoPaulo";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, LockKeyhole, Plus } from "lucide-react";
+import { Bell, Gift, LockKeyhole, Plus, Sparkles } from "lucide-react";
 import { api } from "../../shared/api/client";
 import { Shell } from "../../shared/ui/Shell";
 import { notifyNewMessages } from "../../shared/notifications/browser";
@@ -143,7 +143,7 @@ export function Dashboard({ user }: { user: User }) {
         {err && <div className="error">{err}</div>}
         {open && (
           <form className="panel create-form" onSubmit={create}>
-            <h2>Um novo grupo ✳</h2>
+            <h2>Um novo grupo</h2>
             <div className="form-grid">
               <label>
                 Nome do grupo
@@ -208,7 +208,7 @@ export function Dashboard({ user }: { user: User }) {
                       : "mensagens não lidas"}
                   </span>
                 )}
-                <div className="card-spark">✳</div>
+                <Sparkles className="card-spark" size={22} aria-hidden="true" />
                 <h3>{g.name}</h3>
                 <p>
                   {g.count} {g.count === 1 ? "participante" : "participantes"}{" "}
@@ -219,7 +219,7 @@ export function Dashboard({ user }: { user: User }) {
           </div>
         ) : (
           <div className="empty">
-            <span>✳</span>
+            <Gift className="empty-icon" size={32} aria-hidden="true" />
             <h3>O primeiro encontro começa aqui.</h3>
             <p>Crie um grupo e convide suas pessoas favoritas.</p>
             <button className="btn btn-navy" onClick={() => SO(true)}>

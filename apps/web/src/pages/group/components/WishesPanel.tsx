@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { ExternalLink, Plus, Star } from "lucide-react";
 import { api } from "../../../shared/api/client";
 import type { Group, User } from "../../../shared/types";
 type Props = {
@@ -34,13 +34,20 @@ export function WishesPanel({ group: g, user, action, load, setError }: Props) {
           <div className="wish" key={w.id}>
             <div>
               <strong>
-                {w.favorite ? "★ " : ""}
+                {w.favorite && (
+                  <Star
+                    className="wish-star"
+                    size={15}
+                    aria-label="Favorito"
+                    fill="currentColor"
+                  />
+                )}
                 {w.title}
               </strong>
               <p>{w.detail}</p>
               {w.link && (
                 <a href={w.link} target="_blank" rel="noopener noreferrer">
-                  Ver link ↗
+                  Ver link <ExternalLink size={13} aria-hidden="true" />
                 </a>
               )}
             </div>
@@ -56,7 +63,7 @@ export function WishesPanel({ group: g, user, action, load, setError }: Props) {
                 Editar
               </button>
               <button onClick={() => action(`wish/${w.id}/favorite`, {})}>
-                {w.favorite ? "Favorito ★" : "Favoritar"}
+                {w.favorite ? "Favorito" : "Favoritar"}
               </button>
               <button
                 onClick={async () => {
@@ -137,13 +144,20 @@ export function WishesPanel({ group: g, user, action, load, setError }: Props) {
               <div className="wish" key={w.id}>
                 <div>
                   <strong>
-                    {w.favorite ? "★ " : ""}
+                    {w.favorite && (
+                      <Star
+                        className="wish-star"
+                        size={15}
+                        aria-label="Favorito"
+                        fill="currentColor"
+                      />
+                    )}
                     {w.title}
                   </strong>
                   <p>{w.detail}</p>
                   {w.link && (
                     <a href={w.link} target="_blank" rel="noopener noreferrer">
-                      Ver link ↗
+                      Ver link <ExternalLink size={13} aria-hidden="true" />
                     </a>
                   )}
                 </div>

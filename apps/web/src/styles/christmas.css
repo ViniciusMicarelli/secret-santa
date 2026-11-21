@@ -524,7 +524,7 @@ input:focus {
 }
 .scratch-shell:before,
 .scratch-shell:after {
-  content: "✳";
+  content: none;
   position: absolute;
   font-size: 90px;
   color: #ffffff12;

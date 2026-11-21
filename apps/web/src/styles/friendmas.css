@@ -735,3 +735,49 @@ input {
     margin-top: 56px;
   }
 }
+/* The navigation must sit above transformed hero content on mobile. */
+@media (max-width: 800px) {
+  .landing .nav {
+    position: relative;
+    z-index: 30;
+  }
+  .landing .navlinks.shown {
+    z-index: 31;
+    background: #733027;
+    opacity: 1;
+  }
+}
+.group-card:after {
+  content: none;
+}
+.card-spark {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+.auth-spark {
+  width: 70px;
+  height: 70px;
+  stroke-width: 1.3;
+}
+.empty-icon {
+  color: #a33a2d;
+  margin-bottom: 12px;
+}
+.wish-star {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 5px;
+  color: #a33a2d;
+}
+.wish a svg {
+  display: inline-block;
+  vertical-align: -2px;
+}
+.security-reminder svg {
+  color: #58704e;
+}
+.group-card p,
+.list-head h2 span {
+  color: #806354;
+}

@@ -41,7 +41,7 @@ export function App() {
   if (!ready)
     return (
       <div className="loading">
-        entre nós<span>✳</span>
+        entre nós<span>.</span>
       </div>
     );
   return (
