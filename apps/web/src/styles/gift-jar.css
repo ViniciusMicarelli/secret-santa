@@ -374,3 +374,32 @@
 .bowl-envelope {
   touch-action: none;
 }
+.bowl-shuffle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  border: 1px solid #c8a38a;
+  border-radius: 999px;
+  background: #fffaf0c9;
+  color: #792c25;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.bowl-shuffle:hover:not(:disabled) {
+  background: #fffaf0;
+  border-color: #963d30;
+}
+.bowl-shuffle:focus-visible {
+  outline: 3px solid #963d30;
+  outline-offset: 3px;
+}
+.bowl-shuffle:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}

@@ -6,7 +6,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import gsap from "gsap";
-import { Hand, RotateCcw, Sparkles } from "lucide-react";
+import { Hand, RotateCcw, Shuffle, Sparkles } from "lucide-react";
 
 // Decorative envelopes are independent of the number of people in the group.
 const envelopes = Array.from({ length: 48 }, (_, index) => ({
@@ -26,6 +26,8 @@ type Particle = {
 export function GiftJar({ name }: { name: string }) {
   const [revealed, setRevealed] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [shuffling, setShuffling] = useState(false);
+  const shuffleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const root = useRef<HTMLElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const animating = useRef(false);
@@ -77,7 +79,7 @@ export function GiftJar({ name }: { name: string }) {
     deltaX: number,
     deltaY: number,
   ) {
-    if (animating.current || reduced.current) return;
+    if (animating.current || shuffling || reduced.current) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width,
       y = (event.clientY - rect.top) / rect.height;
@@ -145,12 +147,46 @@ export function GiftJar({ name }: { name: string }) {
   useEffect(
     () => () => {
       timeline.current?.kill();
+      if (shuffleTimer.current) clearTimeout(shuffleTimer.current);
     },
     [],
   );
 
+  function shuffle() {
+    if (busy || animating.current) return;
+    const destinations = envelopes.map(({ x, y }) => ({ x, y }));
+    for (let i = destinations.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [destinations[i], destinations[j]] = [destinations[j], destinations[i]];
+    }
+    const instant = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    particles.current.forEach((particle, index) => {
+      particle.targetX = destinations[index].x;
+      particle.targetY = destinations[index].y;
+      if (instant) {
+        particle.x = particle.targetX;
+        particle.y = particle.targetY;
+        const element = root.current?.querySelector<HTMLElement>(
+          `[data-envelope="${index}"]`,
+        );
+        element?.style.setProperty("--x", `${particle.x * 100}%`);
+        element?.style.setProperty("--y", `${particle.y * 100}%`);
+      }
+    });
+    if (!instant) {
+      setBusy(true);
+      setShuffling(true);
+      shuffleTimer.current = setTimeout(() => {
+        setBusy(false);
+        setShuffling(false);
+        shuffleTimer.current = null;
+      }, 1300);
+    }
+  }
   function choose(index: number) {
-    if (animating.current || revealed) return;
+    if (busy || animating.current || revealed) return;
     animating.current = true;
     setBusy(true);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -254,8 +290,8 @@ export function GiftJar({ name }: { name: string }) {
                 aria-label={`Escolher envelope ${index + 1}`}
                 style={
                   {
-                    "--x": `${envelope.x * 100}%`,
-                    "--y": `${envelope.y * 100}%`,
+                    "--x": `${particles.current[index].x * 100}%`,
+                    "--y": `${particles.current[index].y * 100}%`,
                     "--rotate": `${envelope.rotation}deg`,
                   } as CSSProperties
                 }
@@ -276,10 +312,21 @@ export function GiftJar({ name }: { name: string }) {
               Arraste para misturar; toque para escolher
             </span>
           </p>
+          <button
+            type="button"
+            className="bowl-shuffle"
+            onClick={shuffle}
+            disabled={busy}
+          >
+            <Shuffle size={16} aria-hidden="true" />{" "}
+            {shuffling ? "Embaralhando..." : "Embaralhar envelopes"}
+          </button>
           <span className="sr-only" aria-live="polite">
-            {busy
-              ? "Abrindo seu envelope..."
-              : "Escolha um dos envelopes para revelar seu resultado."}
+            {shuffling
+              ? "Embaralhando os envelopes."
+              : busy
+                ? "Abrindo seu envelope..."
+                : "Escolha um dos envelopes para revelar seu resultado."}
           </span>
         </div>
       ) : (
