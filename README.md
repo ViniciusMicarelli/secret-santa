@@ -24,6 +24,8 @@ Acesse http://localhost:5173. O Vite encaminha `/api` para a API local. A API ap
 
 ## Railway
 
+Consulte o [guia passo a passo de produção](docs/railway.md).
+
 Crie um serviço PostgreSQL separado e dois serviços a partir do repositório, com os Dockerfiles `apps/api/Dockerfile` e `apps/web/Dockerfile` e respectivos diretórios como contexto de build. Na API configure `DATABASE_URL` com a URL privada do PostgreSQL, `ENV=production` e use o `PORT` injetado pela Railway. No frontend configure `API_URL` como URL HTTP privada da API, incluindo porta (por exemplo `http://api.railway.internal:8080`), e ajuste a porta da API conforme a configuração. Exponha o frontend publicamente por HTTPS. O nginx usa `PORT` injetado pela Railway e encaminha `/api` ao backend.
 
 O limitador de tentativas usa PostgreSQL e, por padrão, considera o endereço da conexão. Com proxy confiável que sobrescreva `X-Real-IP`, configure `TRUST_PROXY=true` na API; valide antes a cadeia de proxies para evitar endereços falsificados ou um limite compartilhado por todos os usuários.
