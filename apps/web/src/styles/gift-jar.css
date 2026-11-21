@@ -372,3 +372,9 @@
     transition: none;
   }
 }
+.bowl-glass {
+  touch-action: none;
+}
+.bowl-envelope {
+  touch-action: none;
+}
