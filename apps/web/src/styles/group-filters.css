@@ -1,0 +1,130 @@
+.group-filters {
+  padding: 20px;
+  border: 1px solid #e4d2bb;
+  border-radius: 14px;
+  background: #fffaf0e8;
+}
+.group-filter-top {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+}
+.group-search {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+}
+.group-search svg {
+  position: absolute;
+  left: 15px;
+  color: #866456;
+  pointer-events: none;
+}
+.group-search input {
+  margin: 0;
+  padding-left: 45px;
+  min-width: 0;
+}
+.filter-toggle {
+  flex: none;
+  white-space: nowrap;
+  padding: 12px 16px;
+}
+.filter-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a53a30;
+}
+.group-filter-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 14px;
+  padding-top: 8px;
+}
+.group-filter-fields label {
+  min-width: 0;
+  margin: 10px 0 0;
+}
+.group-filter-fields select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 8px;
+  padding: 14px 12px;
+  font: inherit;
+  color: #54251f;
+  background: #fff;
+  border: 1px solid #d6dfed;
+  border-radius: 5px;
+}
+.group-filter-fields input {
+  min-width: 0;
+  max-width: 100%;
+}
+.group-filter-fields select:focus-visible,
+.group-clear:focus-visible {
+  outline: 2px solid #a33a2d;
+  outline-offset: 2px;
+}
+.group-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 0;
+  color: #87372c;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+.search-count {
+  color: #806354;
+  font-size: 13px;
+  margin: 16px 0;
+}
+.group-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 24px 0;
+}
+.group-pagination span {
+  color: #76584a;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.group-pagination .btn {
+  padding: 12px 16px;
+}
+@media (max-width: 800px) {
+  .group-filter-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .group-filters {
+    padding: 14px;
+  }
+  .group-filter-top {
+    flex-direction: column;
+  }
+  .filter-toggle {
+    width: 100%;
+  }
+  .group-filter-fields {
+    grid-template-columns: 1fr;
+  }
+  .group-pagination {
+    gap: 8px;
+  }
+  .group-pagination .btn {
+    padding: 11px;
+  }
+}

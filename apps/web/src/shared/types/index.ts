@@ -30,6 +30,15 @@ export type GroupSummary = {
   name: string;
   status: string;
   eventDate: string;
+  scheduledAt: string | null;
   count: number;
   unread: number;
+};
+
+export type GroupSearchResult = {
+  items: GroupSummary[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 };

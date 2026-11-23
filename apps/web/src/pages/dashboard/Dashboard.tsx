@@ -1,11 +1,28 @@
 import { formatCalendarDate } from "../../shared/time/saoPaulo";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, Gift, LockKeyhole, Plus, Sparkles } from "lucide-react";
 import { api } from "../../shared/api/client";
 import { Shell } from "../../shared/ui/Shell";
 import { notifyNewMessages } from "../../shared/notifications/browser";
-import type { GroupSummary, User } from "../../shared/types";
+import {
+  GroupFilters,
+  defaultGroupFilters,
+  type GroupFiltersValue,
+} from "./components/GroupFilters";
+import type {
+  Group,
+  GroupSearchResult,
+  GroupSummary,
+  User,
+} from "../../shared/types";
 
 export function Dashboard({ user }: { user: User }) {
   const [groups, SG] = useState<GroupSummary[]>([]),
@@ -15,75 +32,135 @@ export function Dashboard({ user }: { user: User }) {
     [eventDate, SE] = useState(""),
     [budget, SB] = useState(""),
     [err, SR] = useState("");
+  const [filters, setFilters] =
+    useState<GroupFiltersValue>(defaultGroupFilters);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const requestVersion = useRef(0);
   const nav = useNavigate();
   const groupsRef = useRef<GroupSummary[]>([]);
   const [notificationPermission, setNotificationPermission] = useState(() =>
     "Notification" in window ? Notification.permission : "unsupported",
   );
-  const groupIds = groups.map((g) => g.id).join(",");
-  const refreshGroups = (notify = false) =>
-    api("/groups")
-      .then((next: GroupSummary[]) => {
-        if (notify)
-          for (const group of next) {
-            const previous = groupsRef.current.find((g) => g.id === group.id);
-            if (previous)
-              notifyNewMessages(previous.unread, group.unread, group.name);
+  const unreadByGroup = useRef(new Map<number, number>());
+  const searchUrl = useMemo(() => {
+    const params = new URLSearchParams({
+      page: String(page),
+      sort: filters.sort,
+    });
+    for (const key of ["q", "participant", "status", "from", "to"] as const)
+      if (filters[key].trim()) params.set(key, filters[key].trim());
+    return "/groups/search?" + params.toString();
+  }, [filters, page]);
+  const refreshGroups = useCallback(
+    (notify = false) => {
+      const version = ++requestVersion.current;
+      return api(searchUrl)
+        .then((result: GroupSearchResult) => {
+          if (version !== requestVersion.current) return;
+          if (notify)
+            for (const group of result.items) {
+              const previous = groupsRef.current.find((g) => g.id === group.id);
+              if (previous)
+                notifyNewMessages(previous.unread, group.unread, group.name);
+            }
+          for (const group of result.items)
+            unreadByGroup.current.set(group.id, group.unread);
+          groupsRef.current = result.items;
+          SG(result.items);
+          setTotal(result.total);
+          setTotalPages(result.totalPages);
+          setLoading(false);
+          SR("");
+          if (result.totalPages > 0 && page > result.totalPages)
+            setPage(result.totalPages);
+        })
+        .catch((e) => {
+          if (version === requestVersion.current) {
+            SR(e.message || "Não foi possível buscar os grupos.");
+            setLoading(false);
           }
-        groupsRef.current = next;
-        SG(next);
-      })
-      .catch((e) => SR(e.message));
+        });
+    },
+    [searchUrl, page],
+  );
+  const refreshRef = useRef(refreshGroups);
+  refreshRef.current = refreshGroups;
   useEffect(() => {
-    refreshGroups();
-  }, []);
+    requestVersion.current++;
+    setLoading(true);
+    const timer = window.setTimeout(() => refreshGroups(), 300);
+    return () => {
+      window.clearTimeout(timer);
+      requestVersion.current++;
+    };
+  }, [refreshGroups]);
   useEffect(() => {
-    if (!groupIds) return;
-    let stopped = false;
-    const sockets = new Map<number, WebSocket>();
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    const connect = (id: number, attempt = 0) => {
+    let stopped = false,
+      attempt = 0;
+    let socket: WebSocket | null = null;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const connect = () => {
       if (stopped) return;
       const protocol = location.protocol === "https:" ? "wss:" : "ws:";
-      const ws = new WebSocket(
-        `${protocol}//${location.host}/api/groups/${id}/events`,
-      );
-      sockets.set(id, ws);
-      ws.onopen = () => {
+      socket = new WebSocket(`${protocol}//${location.host}/api/events`);
+      socket.onopen = () => {
         attempt = 0;
-        refreshGroups();
+        refreshRef.current();
       };
-      ws.onmessage = (event) => {
+      socket.onmessage = (event) => {
         try {
           const update = JSON.parse(event.data);
           if (
-            update.type === "chat" ||
-            update.type === "group" ||
-            update.type === "read"
+            !["chat", "group", "read"].includes(update.type) ||
+            !Number.isSafeInteger(update.group) ||
+            update.group < 1
           )
-            refreshGroups(update.type === "chat");
+            return;
+          if (
+            update.type === "chat" &&
+            document.hidden &&
+            "Notification" in window &&
+            Notification.permission === "granted"
+          ) {
+            const previous = unreadByGroup.current.get(update.group) ?? 0;
+            api(`/groups/${update.group}`)
+              .then((group: Group) => {
+                if (stopped) return;
+                const current = group.unread.incoming + group.unread.outgoing;
+                notifyNewMessages(previous, current, group.name);
+                unreadByGroup.current.set(group.id, current);
+              })
+              .catch(() => {});
+          }
+          refreshRef.current();
         } catch {
           /* Ignore malformed events. */
         }
       };
-      ws.onclose = () => {
+      socket.onclose = () => {
         if (!stopped)
-          timers.push(
-            setTimeout(
-              () => connect(id, attempt + 1),
-              Math.min(1000 * 2 ** attempt, 30000) + Math.random() * 500,
-            ),
+          timer = setTimeout(
+            connect,
+            Math.min(1000 * 2 ** attempt++, 30000) + Math.random() * 500,
           );
       };
-      ws.onerror = () => ws.close();
+      socket.onerror = () => socket?.close();
     };
-    for (const id of groupIds.split(",").map(Number)) connect(id);
+    connect();
+    const visible = () => {
+      if (!document.hidden) refreshRef.current();
+    };
+    document.addEventListener("visibilitychange", visible);
     return () => {
       stopped = true;
-      timers.forEach(clearTimeout);
-      sockets.forEach((socket) => socket.close());
+      if (timer) clearTimeout(timer);
+      socket?.close();
+      document.removeEventListener("visibilitychange", visible);
     };
-  }, [groupIds]);
+  }, []);
   async function create(e: FormEvent) {
     e.preventDefault();
     try {
@@ -184,9 +261,21 @@ export function Dashboard({ user }: { user: User }) {
         )}
         <div className="list-head">
           <h2>
-            Seus grupos <span>{String(groups.length).padStart(2, "0")}</span>
+            Seus grupos <span>{String(total).padStart(2, "0")}</span>
           </h2>
         </div>
+        <GroupFilters
+          value={filters}
+          onChange={(next) => {
+            setFilters(next);
+            setPage(1);
+          }}
+        />
+        <p className="search-count" aria-live="polite">
+          {loading
+            ? "Buscando grupos..."
+            : `${total} ${total === 1 ? "grupo encontrado" : "grupos encontrados"}`}
+        </p>
         {groups.length ? (
           <div className="groups-grid">
             {groups.map((g) => (
@@ -197,7 +286,9 @@ export function Dashboard({ user }: { user: User }) {
                       ? "SORTEADO"
                       : g.status === "needs_adjustment"
                         ? "PRECISA DE AJUSTES"
-                        : "EM PREPARAÇÃO"}
+                        : g.scheduledAt
+                          ? "AGENDADO"
+                          : "EM PREPARAÇÃO"}
                   </span>
                 </div>
                 {g.unread > 0 && (
@@ -217,15 +308,58 @@ export function Dashboard({ user }: { user: User }) {
               </Link>
             ))}
           </div>
-        ) : (
+        ) : !loading && !err ? (
           <div className="empty">
             <Gift className="empty-icon" size={32} aria-hidden="true" />
-            <h3>O primeiro encontro começa aqui.</h3>
-            <p>Crie um grupo e convide suas pessoas favoritas.</p>
-            <button className="btn btn-navy" onClick={() => SO(true)}>
-              Criar meu primeiro grupo
-            </button>
+            {filters.q ||
+            filters.participant ||
+            filters.status ||
+            filters.from ||
+            filters.to ? (
+              <>
+                <h3>Nenhum grupo encontrado.</h3>
+                <p>Tente outra busca ou ajuste os filtros.</p>
+                <button
+                  className="btn btn-outline"
+                  onClick={() => {
+                    setFilters(defaultGroupFilters);
+                    setPage(1);
+                  }}
+                >
+                  Limpar filtros
+                </button>
+              </>
+            ) : (
+              <>
+                <h3>O primeiro encontro começa aqui.</h3>
+                <p>Crie um grupo e convide suas pessoas favoritas.</p>
+                <button className="btn btn-navy" onClick={() => SO(true)}>
+                  Criar meu primeiro grupo
+                </button>
+              </>
+            )}
           </div>
+        ) : null}
+        {totalPages > 1 && (
+          <nav className="group-pagination" aria-label="Paginação de grupos">
+            <button
+              className="btn btn-outline"
+              disabled={loading || page <= 1}
+              onClick={() => setPage((p) => p - 1)}
+            >
+              Anterior
+            </button>
+            <span>
+              Página {page} de {totalPages}
+            </span>
+            <button
+              className="btn btn-outline"
+              disabled={loading || page >= totalPages}
+              onClick={() => setPage((p) => p + 1)}
+            >
+              Próxima
+            </button>
+          </nav>
         )}
         <div className="account-links">
           <Link to="/seguranca">Segurança e códigos de recuperação</Link>
