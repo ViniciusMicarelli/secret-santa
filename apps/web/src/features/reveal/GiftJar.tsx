@@ -23,7 +23,14 @@ type Particle = {
   rotation: number;
 };
 
-export function GiftJar({ name }: { name: string }) {
+export function GiftJar({
+  name,
+  demo = false,
+}: {
+  name: string;
+  demo?: boolean;
+}) {
+  const bowlEnvelopes = useRef(envelopes.slice(demo ? 24 : 0)).current;
   const [revealed, setRevealed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [shuffling, setShuffling] = useState(false);
@@ -31,7 +38,7 @@ export function GiftJar({ name }: { name: string }) {
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const animating = useRef(false);
   const particles = useRef<Particle[]>(
-    envelopes.map((p) => ({ ...p, targetX: p.x, targetY: p.y })),
+    bowlEnvelopes.map((p) => ({ ...p, targetX: p.x, targetY: p.y })),
   );
   const gesture = useRef<{
     x: number;
@@ -51,7 +58,13 @@ export function GiftJar({ name }: { name: string }) {
     ).matches;
     if (reduced.current) return;
     let frame = 0;
+    let visible = false;
+    function start() {
+      if (visible && !document.hidden && !frame)
+        frame = requestAnimationFrame(tick);
+    }
     function tick() {
+      frame = 0;
       if (!animating.current && !mouseHeld.current) {
         const items = particles.current;
         root.current
@@ -68,10 +81,29 @@ export function GiftJar({ name }: { name: string }) {
             }
           });
       }
-      frame = requestAnimationFrame(tick);
+      start();
     }
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) start();
+      else {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    });
+    if (root.current) observer.observe(root.current);
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      } else start();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      cancelAnimationFrame(frame);
+    };
   }, [revealed]);
   function stir(
     event: ReactPointerEvent<HTMLDivElement>,
@@ -162,7 +194,7 @@ export function GiftJar({ name }: { name: string }) {
 
   function shuffle() {
     if (busy || animating.current) return;
-    const destinations = envelopes.map(({ x, y }) => ({ x, y }));
+    const destinations = bowlEnvelopes.map(({ x, y }) => ({ x, y }));
     for (let i = destinations.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [destinations[i], destinations[j]] = [destinations[j], destinations[i]];
@@ -215,7 +247,7 @@ export function GiftJar({ name }: { name: string }) {
           {
             x: crossingX,
             y: crossingY,
-            rotation: envelopes[index].rotation + (index % 2 ? 12 : -12),
+            rotation: bowlEnvelopes[index].rotation + (index % 2 ? 12 : -12),
             duration: 0.85,
             ease: "sine.inOut",
             onUpdate: () => render(particle, index),
@@ -227,7 +259,7 @@ export function GiftJar({ name }: { name: string }) {
           {
             x: destination.x,
             y: destination.y,
-            rotation: envelopes[index].rotation,
+            rotation: bowlEnvelopes[index].rotation,
             duration: 0.95,
             ease: "sine.inOut",
             onUpdate: () => render(particle, index),
@@ -292,20 +324,22 @@ export function GiftJar({ name }: { name: string }) {
 
   return (
     <section
-      className="gift-jar-panel"
+      className={demo ? "gift-jar-panel gift-jar-demo" : "gift-jar-panel"}
       ref={root}
       aria-labelledby="gift-jar-title"
     >
       <div className="jar-intro">
         <div className="kicker">
-          UM SEGREDO SÓ SEU <Sparkles size={13} aria-hidden="true" />
+          {demo ? "UMA PRÉVIA PARA VOCÊ" : "UM SEGREDO SÓ SEU"}{" "}
+          <Sparkles size={13} aria-hidden="true" />
         </div>
         <h2 id="gift-jar-title">
           Um pequeno papel, <em>uma grande surpresa.</em>
         </h2>
         <p>
-          Explore os envelopes e escolha aquele que vai revelar seu amigo
-          secreto.
+          {demo
+            ? "Escolha um envelope e experimente a revelação."
+            : "Explore os envelopes e escolha aquele que vai revelar seu amigo secreto."}
         </p>
       </div>
       {!revealed ? (
@@ -330,7 +364,7 @@ export function GiftJar({ name }: { name: string }) {
               <Sparkles size={12} />
               <Sparkles size={17} />
             </div>
-            {envelopes.map((envelope, index) => (
+            {bowlEnvelopes.map((envelope, index) => (
               <button
                 key={index}
                 type="button"
@@ -392,7 +426,9 @@ export function GiftJar({ name }: { name: string }) {
               <Sparkles size={16} />
             </span>
           </span>
-          <span className="jar-reveal-label">VOCÊ VAI PRESENTEAR</span>
+          <span className="jar-reveal-label">
+            {demo ? "EXEMPLO DE RESULTADO" : "VOCÊ VAI PRESENTEAR"}
+          </span>
           <strong>{name}</strong>
           <p>Agora é só preparar uma surpresa cheia de carinho.</p>
           <button type="button" className="jar-reset" onClick={reset}>
@@ -401,8 +437,9 @@ export function GiftJar({ name }: { name: string }) {
         </div>
       )}
       <p className="jar-footnote">
-        Os envelopes são uma brincadeira: seu amigo secreto já foi sorteado e
-        não muda com a escolha.
+        {demo
+          ? "Esta é uma demonstração. No seu grupo, somente você verá seu resultado."
+          : "Os envelopes são uma brincadeira: seu amigo secreto já foi sorteado e não muda com a escolha."}
       </p>
     </section>
   );

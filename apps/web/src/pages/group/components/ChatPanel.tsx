@@ -69,7 +69,16 @@ export function ChatPanel({
         <div className="messages" ref={messageList}>
           {messages.length ? (
             messages.map((m) => (
-              <div className={"message " + (m.mine ? "mine" : "")} key={m.id}>
+              <div
+                className={
+                  "message " +
+                  (m.mine ? "mine " : "") +
+                  (m.id === messages[messages.length - 1]?.id
+                    ? "message-latest"
+                    : "")
+                }
+                key={m.id}
+              >
                 {m.content}
               </div>
             ))

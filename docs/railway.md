@@ -46,7 +46,7 @@ API_URL=http://${{api.RAILWAY_PRIVATE_DOMAIN}}:8080
 
 - Crie contas próprias de teste no ambiente de produção: as quatro contas do banco local não são copiadas automaticamente.
 - Crie um grupo, entre com três contas, confirme as regras de família e faça um sorteio de teste. Use janelas privadas ou perfis separados.
-- Verifique edição de desejos, raspadinha e mensagens entre contas. Com duas janelas abertas, confirme se a notificação e o WebSocket atualizam a tela.
+- Verifique edição de desejos, revelação pelo pote e mensagens entre contas. Com duas janelas abertas, confirme se a notificação e o WebSocket atualizam a tela.
 - Faça um teste separado de sorteio agendado e confirme o processamento sem manter o navegador aberto. Não há garantia de execução no segundo exato.
 - Confirme HTTPS e, nas ferramentas do navegador, confira que o cookie `session` tem `HttpOnly`, `Secure` e `SameSite=Lax`. Faça logout e verifique que a sessão anterior deixa de funcionar.
 - Gere códigos de recuperação, guarde-os com segurança e teste a recuperação em conta de teste. Não há recuperação por e-mail.

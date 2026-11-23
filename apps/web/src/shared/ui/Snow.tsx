@@ -6,6 +6,7 @@ export function Snow() {
       {Array.from({ length: 18 }, (_, i) => (
         <span
           key={i}
+          className={i % 5 === 0 ? "snow-near" : "snow-far"}
           style={
             {
               "--x": `${(i * 37) % 100}%`,

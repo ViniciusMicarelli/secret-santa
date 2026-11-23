@@ -8,6 +8,7 @@ import "./styles/palette.css";
 import "./styles/brand.css";
 import "./styles/friendmas.css";
 import "./styles/gift-jar.css";
+import "./styles/motion.css";
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <App />

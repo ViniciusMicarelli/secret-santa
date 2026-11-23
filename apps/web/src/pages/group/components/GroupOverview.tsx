@@ -7,6 +7,7 @@ import {
   saoPauloToISOString,
 } from "../../../shared/time/saoPaulo";
 import { api } from "../../../shared/api/client";
+import { ScheduledCountdown } from "./ScheduledCountdown";
 import { GiftJar } from "../../../features/reveal/GiftJar";
 import type { Group, User } from "../../../shared/types";
 type Props = {
@@ -168,6 +169,9 @@ export function GroupOverview({
               </strong>
             </div>
           </div>
+          {g.scheduledAt && g.status === "open" && (
+            <ScheduledCountdown at={g.scheduledAt} />
+          )}
           {g.owner && g.status !== "drawn" && (
             <div className="panel">
               <div className="kicker">ORGANIZADOR</div>

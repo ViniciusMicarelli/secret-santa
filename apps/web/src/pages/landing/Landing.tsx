@@ -21,7 +21,7 @@ import type { User } from "../../shared/types";
 import { Snow } from "../../shared/ui/Snow";
 import { FrostedCard } from "../../components/ui/frosted-card";
 import { Intro } from "./Intro";
-import { ScratchCard } from "../../features/reveal/ScratchCard";
+import { GiftJar } from "../../features/reveal/GiftJar";
 gsap.registerPlugin(ScrollTrigger);
 
 export function Landing({ user }: { user: User | null }) {
@@ -94,6 +94,40 @@ export function Landing({ user }: { user: User | null }) {
         delay: introDelay + 0.1,
         ease: "power3.out",
       });
+      const invitation = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".invitation-illustration",
+          start: "top 90%",
+          end: "bottom 55%",
+          scrub: 0.6,
+        },
+      });
+      invitation
+        .to(".invitation-flap", { rotateX: 180, ease: "none" }, 0)
+        .to(".invitation-letter", { y: -20, ease: "none" }, 0.2);
+      gsap.fromTo(
+        ".steps-ribbon",
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".steps",
+            start: "top 85%",
+            end: "bottom 65%",
+            scrub: true,
+          },
+        },
+      );
+      gsap.utils.toArray<HTMLElement>(".step-icon").forEach((icon) =>
+        gsap.from(icon, {
+          rotation: -12,
+          scale: 0.8,
+          duration: 0.65,
+          ease: "back.out(1.5)",
+          scrollTrigger: { trigger: icon, start: "top 90%", once: true },
+        }),
+      );
       gsap.from(".steps article", {
         scrollTrigger: { trigger: ".steps", start: "top 85%", once: true },
         y: 35,
@@ -302,6 +336,7 @@ export function Landing({ user }: { user: User | null }) {
                 card.style.setProperty("--my", `${e.clientY - r.top}px`);
               }}
             >
+              <span className="steps-ribbon" aria-hidden="true" />
               <article>
                 <div className="step-icon">
                   <Users />
@@ -348,6 +383,15 @@ export function Landing({ user }: { user: User | null }) {
                 Um encontro, uma surpresa e mais uma história para guardar.
                 Celebre do seu jeito, com quem faz parte dele.
               </p>
+              <div className="invitation-illustration" aria-hidden="true">
+                <div className="invitation-letter">
+                  <Heart size={15} />
+                </div>
+                <div className="invitation-envelope">
+                  <span className="invitation-flap" />
+                </div>
+                <span>FEITO PARA REUNIR</span>
+              </div>
             </div>
             <FrostedCard
               imageUrl="https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=1100&q=80"
@@ -367,8 +411,8 @@ export function Landing({ user }: { user: User | null }) {
                 <em>seu para revelar.</em>
               </h2>
               <p>
-                Um momento de suspense só para você. Raspe o cartão e descubra
-                quem vai receber seu carinho neste Natal.
+                Escolha um envelope no pote e descubra quem vai receber seu
+                carinho neste Natal.
               </p>
               <Link
                 className="btn btn-navy"
@@ -378,14 +422,7 @@ export function Landing({ user }: { user: User | null }) {
               </Link>
             </div>
             <div className="experience-preview">
-              <div className="preview-note">
-                UMA PEQUENA
-                <br />
-                <strong>GRANDE SURPRESA</strong>
-              </div>
-              <div className="preview-card preview-card-interactive">
-                <ScratchCard name="Alguém especial" demo />
-              </div>
+              <GiftJar name="Alguém especial" demo />
             </div>
           </div>
         </section>
