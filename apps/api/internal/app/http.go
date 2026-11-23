@@ -78,6 +78,8 @@ func newHandler() http.Handler {
 		respond(w, map[string]any{"id": id, "name": n, "username": u})
 	})
 	mux.HandleFunc("GET /api/groups", listGroups)
+	mux.HandleFunc("GET /api/groups/search", searchGroups)
+	mux.HandleFunc("GET /api/events", accountEvents)
 	mux.HandleFunc("POST /api/groups", createGroup)
 	mux.HandleFunc("POST /api/join/{invite}", join)
 	mux.HandleFunc("GET /api/groups/{id}", getGroup)

@@ -117,6 +117,28 @@ func TestWebsocketAuthorizationAndPrivateEvents(t *testing.T) {
 	for _, conn := range extra {
 		conn.Close()
 	}
+	accountDial := func(i int, origin string) (*websocket.Conn, *http.Response, error) {
+		h := http.Header{}
+		h.Set("Origin", origin)
+		h.Set("Cookie", "session="+tokens[i])
+		return websocket.DefaultDialer.Dial("ws"+strings.TrimPrefix(server.URL, "http")+"/api/events", h)
+	}
+	if c, resp, e := accountDial(0, "https://evil.example"); e == nil {
+		c.Close()
+		t.Fatal("cross-origin account socket connected")
+	} else if resp == nil || resp.StatusCode != 403 {
+		t.Fatalf("account origin status: %v", resp)
+	}
+	account, _, err := accountDial(0, server.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer account.Close()
+	outsider, _, err := accountDial(3, server.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer outsider.Close()
 	notifyUpdate(updateEvent{Group: g, Kind: "group"})
 	for i := range conns {
 		conns[i].SetReadDeadline(time.Now().Add(3 * time.Second))
@@ -127,6 +149,18 @@ func TestWebsocketAuthorizationAndPrivateEvents(t *testing.T) {
 		if len(update) != 1 || update["type"] != "group" {
 			t.Fatalf("unexpected group event: %v", update)
 		}
+	}
+	account.SetReadDeadline(time.Now().Add(3 * time.Second))
+	var accountUpdate map[string]any
+	if err = account.ReadJSON(&accountUpdate); err != nil {
+		t.Fatalf("account event: %v", err)
+	}
+	if len(accountUpdate) != 2 || accountUpdate["type"] != "group" || accountUpdate["group"] != float64(g) {
+		t.Fatalf("unexpected account event: %v", accountUpdate)
+	}
+	outsider.SetReadDeadline(time.Now().Add(300 * time.Millisecond))
+	if err = outsider.ReadJSON(&accountUpdate); err == nil {
+		t.Fatal("account event leaked to non-member")
 	}
 	body, _ := json.Marshal(map[string]string{"content": "mensagem privada"})
 	req, _ := http.NewRequest("POST", server.URL+fmt.Sprintf("/api/groups/%d/chat/outgoing", g), bytes.NewReader(body))

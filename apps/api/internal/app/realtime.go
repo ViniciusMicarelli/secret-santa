@@ -23,7 +23,11 @@ type realtimeClient struct {
 	group, user int64
 	session     string
 	conn        *websocket.Conn
-	send        chan string
+	send        chan socketEvent
+}
+type socketEvent struct {
+	Type  string `json:"type"`
+	Group int64  `json:"group,omitempty"`
 }
 
 var realtime = struct {
@@ -135,10 +139,31 @@ func listenUpdates(ctx context.Context, ready chan<- struct{}) {
 	}
 }
 func dispatchUpdate(event updateEvent) {
+	// Resolve membership once before locking clients; account-wide sockets receive
+	// group identifiers only for groups the account currently belongs to.
+	members := map[int64]bool{}
+	rows, err := db.Query(ctx, "select user_id from members where group_id=$1", event.Group)
+	if err == nil {
+		for rows.Next() {
+			var id int64
+			if rows.Scan(&id) == nil {
+				members[id] = true
+			}
+		}
+		err = rows.Err()
+		rows.Close()
+	}
 	realtime.Lock()
 	defer realtime.Unlock()
 	for c := range realtime.clients {
-		if c.group != event.Group {
+		if c.group == 0 && err != nil {
+			c.conn.Close()
+			continue
+		}
+		if c.group != 0 && c.group != event.Group {
+			continue
+		}
+		if c.group == 0 && !members[c.user] {
 			continue
 		}
 		if (event.Kind == "chat" || event.Kind == "read") && c.user != event.User1 && c.user != event.User2 {
@@ -148,8 +173,12 @@ func dispatchUpdate(event updateEvent) {
 		if kind != "chat" && kind != "read" {
 			kind = "group"
 		}
+		message := socketEvent{Type: kind}
+		if c.group == 0 {
+			message.Group = event.Group
+		}
 		select {
-		case c.send <- kind:
+		case c.send <- message:
 		default: // A slow client must reconnect and refresh rather than miss events.
 			c.conn.Close()
 		}
@@ -157,6 +186,10 @@ func dispatchUpdate(event updateEvent) {
 }
 func validClient(c *realtimeClient) bool {
 	var valid bool
+	if c.group == 0 {
+		err := db.QueryRow(ctx, `select exists(select 1 from sessions where token=$1 and user_id=$2 and expires_at>now())`, c.session, c.user).Scan(&valid)
+		return err == nil && valid
+	}
 	err := db.QueryRow(ctx, `select exists(select 1 from sessions s join members m on m.user_id=s.user_id where s.token=$1 and s.user_id=$2 and s.expires_at>now() and m.group_id=$3)`, c.session, c.user, c.group).Scan(&valid)
 	return err == nil && valid
 }
@@ -170,6 +203,18 @@ func groupEvents(w http.ResponseWriter, r *http.Request) {
 		fail(w, 403, "Você não participa deste grupo.")
 		return
 	}
+	acceptRealtime(w, r, user, group)
+}
+
+func accountEvents(w http.ResponseWriter, r *http.Request) {
+	user := require(w, r)
+	if user == 0 {
+		return
+	}
+	acceptRealtime(w, r, user, 0)
+}
+
+func acceptRealtime(w http.ResponseWriter, r *http.Request, user, group int64) {
 	cookie, e := r.Cookie("session")
 	if e != nil {
 		fail(w, 401, "Entre na sua conta.")
@@ -185,7 +230,7 @@ func groupEvents(w http.ResponseWriter, r *http.Request) {
 	if e != nil {
 		return
 	}
-	c := &realtimeClient{group: group, user: user, session: hash(cookie.Value), conn: conn, send: make(chan string, 16)}
+	c := &realtimeClient{group: group, user: user, session: hash(cookie.Value), conn: conn, send: make(chan socketEvent, 16)}
 	realtime.Lock()
 	realtime.clients[c] = struct{}{}
 	realtime.Unlock()
@@ -208,12 +253,12 @@ func groupEvents(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-done:
 			return
-		case kind := <-c.send:
+		case message := <-c.send:
 			if !validClient(c) {
 				return
 			}
 			conn.SetWriteDeadline(time.Now().Add(5 * time.Second))
-			if conn.WriteJSON(map[string]string{"type": kind}) != nil {
+			if conn.WriteJSON(message) != nil {
 				return
 			}
 		case <-ticker.C:
